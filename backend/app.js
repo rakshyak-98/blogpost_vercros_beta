@@ -1,21 +1,21 @@
+require("dotenv").config(); // keep this at top, other wise this can create inconsistency in environment variables;
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const routes = require("./routes");
+const routes = require("./routes/index");
 
-dotenv.config();
+const CONFIG = require("./config");
 const app = express();
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(CONFIG.DB_URL);
 
 app.use(bodyParser.json());
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(cors({ origin: CONFIG.ORIGIN }));
 app.use("/api", routes);
 
-app.listen(process.env.PORT, () => {
-	console.log(`Express Server running on port ${process.env.PORT}`);
+app.listen(CONFIG.PORT, () => {
+	console.log(`Express Server running on port ${CONFIG.PORT}`);
 });
 
