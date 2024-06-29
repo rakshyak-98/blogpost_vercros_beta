@@ -15,6 +15,9 @@ Router.use(UserController.checkUserToken);
 Router.use(verifyUserToken);
 
 Router.post("/", PostController.createPost);
+Router.delete("/:id", PostController.deletePost);
+Router.get("/", PostController.getAllPost);
+Router.get("/:id", PostController.getPostById);
 
 module.exports = Router;
 

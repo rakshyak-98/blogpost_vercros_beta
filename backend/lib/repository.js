@@ -21,6 +21,25 @@ Repository.createPost = async (data, userRef) => {
 	return newPost;
 };
 
+Repository.getPostById = async (id) => {
+	return await Post.findById(id, { __v: 0, userRef: 0 });
+};
+
+Repository.getAllPost = async () => {
+	// TODO: paginate this
+	const posts = await Post.find({}, { __v: 0, userRef: 0 });
+	return posts;
+};
+
+Repository.deletePost = async (id) => {
+	const post = await Post.findById(id, { _id: 1 });
+	if (!post) {
+		throw new Error("POST_NOT_FOUND");
+	}
+	await post.deleteOne();
+	return post;
+};
+
 Repository.createProfile = async (data, userRef) => {
 	const schema = zod.object({
 		firstName: zod.string().min(3).max(50),
