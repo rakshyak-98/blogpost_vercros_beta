@@ -3,7 +3,7 @@ function PostController() {}
 
 PostController.getPostById = async (req, res) => {
 	try {
-		const post = await Repository.getPostById(req.params.id);
+		const post = await Repository.getBlogById(req.params.id);
 		res.status(200).send(post);
 	} catch (error) {
 		res.status(400).send(error.message);
@@ -13,7 +13,7 @@ PostController.getPostById = async (req, res) => {
 
 PostController.getAllPost = async (req, res) => {
 	try {
-		const posts = await Repository.getAllPost();
+		const posts = await Repository.getAllBlog();
 		res.status(200).send(posts);
 	} catch (error) {
 		res.status(400).send(error.message);
@@ -23,7 +23,7 @@ PostController.getAllPost = async (req, res) => {
 
 PostController.createPost = async (req, res) => {
 	try {
-		const post = await Repository.createPost(req.body, req.userData.id);
+		const post = await Repository.createBlog(req.body, req.userData.id);
 		res.status(201).send({
 			id: post._id,
 			description: post.description,
@@ -37,7 +37,7 @@ PostController.createPost = async (req, res) => {
 
 PostController.deletePost = async (req, res) => {
 	try {
-		const post = await Repository.deletePost(req.params.id);
+		const post = await Repository.deleteBlog(req.params.id);
 		res.status(200).send(post);
 	} catch (error) {
 		res.status(400).send(error.message);

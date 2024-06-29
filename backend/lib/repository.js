@@ -3,11 +3,11 @@ const zod = require("zod");
 const User = require("../models/UserModel");
 const Profile = require("../models/ProfileModel");
 const jwt = require("jsonwebtoken");
-const Post = require("../models/PostModel");
+const Blog = require("../models/BlogModel");
 
 function Repository() {}
 
-Repository.createPost = async (data, userRef) => {
+Repository.createBlog = async (data, userRef) => {
 	const schema = zod.object({
 		title: zod.string().min(3).max(50),
 		description: zod.string().min(3).max(10000),
@@ -17,22 +17,22 @@ Repository.createPost = async (data, userRef) => {
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const newPost = await Post.create({ ...data, userRef: userRef });
+	const newPost = await Blog.create({ ...data, userRef: userRef });
 	return newPost;
 };
 
-Repository.getPostById = async (id) => {
-	return await Post.findById(id, { __v: 0, userRef: 0 });
+Repository.getBlogById = async (id) => {
+	return await Blog.findById(id, { __v: 0, userRef: 0 });
 };
 
-Repository.getAllPost = async () => {
+Repository.getAllBlog = async () => {
 	// TODO: paginate this
-	const posts = await Post.find({}, { __v: 0, userRef: 0 });
+	const posts = await Blog.find({}, { __v: 0, userRef: 0 });
 	return posts;
 };
 
-Repository.deletePost = async (id) => {
-	const post = await Post.findById(id, { _id: 1 });
+Repository.deleteBlog = async (id) => {
+	const post = await Blog.findById(id, { _id: 1 });
 	if (!post) {
 		throw new Error("POST_NOT_FOUND");
 	}

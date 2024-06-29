@@ -1,6 +1,6 @@
 const UserController = require("../controller/userController");
 const Router = require("express").Router();
-const PostController = require("../controller/postController");
+const BlogController = require("../controller/blogController");
 
 function verifyUserToken(req, res, next) {
 	if (!req.userData.id) {
@@ -14,10 +14,10 @@ function verifyUserToken(req, res, next) {
 Router.use(UserController.checkUserToken);
 Router.use(verifyUserToken);
 
-Router.post("/", PostController.createPost);
-Router.delete("/:id", PostController.deletePost);
-Router.get("/", PostController.getAllPost);
-Router.get("/:id", PostController.getPostById);
+Router.post("/", BlogController.createPost);
+Router.delete("/:id", BlogController.deletePost);
+Router.get("/", BlogController.getAllPost);
+Router.get("/:id", BlogController.getPostById);
 
 module.exports = Router;
 
