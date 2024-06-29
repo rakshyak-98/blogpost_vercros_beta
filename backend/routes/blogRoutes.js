@@ -18,7 +18,7 @@ Router.post("/", BlogController.createPost);
 Router.delete("/:id", BlogController.deletePost);
 Router.get("/", BlogController.getAllPost);
 Router.get("/:id", BlogController.getPostById);
-Route.path("/:id", BlogController.editPost);
+Router.patch("/:id", BlogController.editPost);
 
 module.exports = Router;
 
