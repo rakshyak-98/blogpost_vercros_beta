@@ -26,7 +26,7 @@ UserController.createUser = async function (req, res) {
 			username: req.body.username,
 			password: req.body.password,
 		});
-		res.status(201).send(Repository.generateToken(newUser));
+		res.status(201).send(Repository.getTokens(newUser));
 	} catch (error) {
 		res.status(400).send(error.message);
 	}

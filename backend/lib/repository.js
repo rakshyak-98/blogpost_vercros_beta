@@ -4,8 +4,31 @@ const User = require("../models/UserModel");
 const Profile = require("../models/ProfileModel");
 const jwt = require("jsonwebtoken");
 const Blog = require("../models/BlogModel");
+const Share = require("../models/ShareModel");
 
 function Repository() {}
+
+Repository.getBlogShareWithMe = async (userRefId) => {
+	const share = await Share.find({ userRef: userRefId }, { __v: 0 }).populate("userRef");
+	if (!share) {
+		throw new Error("SHARE_NOT_FOUND");
+	}
+	return share;
+};
+
+Repository.createShare = async (data) => {
+	const schema = zod.object({
+		blog: zod.string().min(24).max(24),
+		accessPermission: zod.enum(["view", "edit"]),
+		userRef: zod.array(zod.string().min(24).max(24)),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const newShare = await Share.create(data);
+	return newShare;
+};
 
 Repository.editBlog = async (data, id) => {
 	const schema = zod.object({

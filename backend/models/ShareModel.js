@@ -2,18 +2,19 @@ const mongoose = require("mongoose");
 
 const ShareSchema = new mongoose.Schema({
 	blog: {
-		type: mongoose.Schema.Types.ObjectIdj,
-		ref: "Blog",
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Blogs",
 		required: true,
 	},
-	accessPermissions: {
-		enum: ["view", "edit"],
+	accessPermission: {
+		type: String,
 		required: true,
+		enumValues: ["view", "edit"],
 	},
 	userRef: [
 		{
+			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
-			required: true,
 		},
 	],
 	createdAt: {
