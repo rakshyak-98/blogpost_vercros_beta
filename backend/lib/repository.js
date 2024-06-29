@@ -7,6 +7,20 @@ const Blog = require("../models/BlogModel");
 
 function Repository() {}
 
+Repository.editBlog = async (data, id) => {
+	const schema = zod.object({
+		title: zod.string().min(3).max(50),
+		description: zod.string().min(3).max(10000),
+		image: zod.string().min(3),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const post = await Blog.findByIdAndUpdate(id, data, { new: true });
+	return post;
+};
+
 Repository.createBlog = async (data, userRef) => {
 	const schema = zod.object({
 		title: zod.string().min(3).max(50),
