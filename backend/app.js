@@ -10,7 +10,8 @@ const CONFIG = require("./config");
 const app = express();
 mongoose.connect(CONFIG.DB_URL);
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(helmet());
 app.use(cors({ origin: CONFIG.ORIGIN }));
 app.use("/api", routes);

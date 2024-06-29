@@ -33,9 +33,22 @@ UserController.createUser = async function (req, res) {
 };
 
 UserController.checkUserToken = async function (req, res, next) {
+	if (!req.headers.hasOwnProperty("authorization")) {
+		res.status(401).send("AUTHORIZATION_HEADER_NOT_FOUND");
+		return;
+	}
 	const token = req.headers["authorization"].split("Bearer ")[1];
-	const decode = Repository.verifyToken(token);
-	req.userData = decode;
+	if (!token) {
+		res.status(401).send("TOKEN_NOT_FOUND");
+		return;
+	}
+	try {
+		const decode = Repository.verifyToken(token);
+		req.userData = decode;
+	} catch (error) {
+		res.status(401).send("TOKEN_NOT_VALID");
+		return;
+	}
 	next();
 };
 

@@ -1,23 +1,38 @@
 const bcrypt = require("bcrypt");
 const zod = require("zod");
-const User = require("../models/User");
-const Profile = require("../models/Profile");
+const User = require("../models/UserModel");
+const Profile = require("../models/ProfileModel");
 const jwt = require("jsonwebtoken");
+const Post = require("../models/PostModel");
 
 function Repository() {}
 
+Repository.createPost = async (data, userRef) => {
+	const schema = zod.object({
+		title: zod.string().min(3).max(50),
+		description: zod.string().min(3).max(50),
+		image: zod.string().min(3).max(50),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const newPost = await Post.create({ ...data, userRef: userRef });
+	return newPost;
+};
+
 Repository.createProfile = async (data, userRef) => {
-    const schema = zod.object({
-        firstName: zod.string().min(3).max(50),
-        lastName: zod.string().min(3).max(50),
-    });
-    const validation = schema.safeParse(data);
-    if(!validation.success) {
-        throw new Error(validation.error);
-    }
-    const newProfile = await Profile.create({...data, userRef: userRef});
-    return newProfile;
-}
+	const schema = zod.object({
+		firstName: zod.string().min(3).max(50),
+		lastName: zod.string().min(3).max(50),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const newProfile = await Profile.create({ ...data, userRef: userRef });
+	return newProfile;
+};
 
 Repository.checkUser = async (data) => {
 	return await User.findOne({ username: data.username });
