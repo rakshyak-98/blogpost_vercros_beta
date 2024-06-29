@@ -1,7 +1,7 @@
 const Repository = require("../lib/repository");
-function PostController() {}
+function BlogController() {}
 
-PostController.editPost = async (req, res) => {
+BlogController.editBlog = async (req, res) => {
 	try {
 		const post = await Repository.editBlog(req.body, req.params.id);
 		res.status(200).send(post);
@@ -11,7 +11,7 @@ PostController.editPost = async (req, res) => {
 	}
 };
 
-PostController.getPostById = async (req, res) => {
+BlogController.getPostById = async (req, res) => {
 	try {
 		const post = await Repository.getBlogById(req.params.id);
 		res.status(200).send(post);
@@ -21,7 +21,7 @@ PostController.getPostById = async (req, res) => {
 	}
 };
 
-PostController.getAllPost = async (req, res) => {
+BlogController.getAllPost = async (req, res) => {
 	try {
 		const posts = await Repository.getAllBlog();
 		res.status(200).send(posts);
@@ -31,7 +31,7 @@ PostController.getAllPost = async (req, res) => {
 	}
 };
 
-PostController.createPost = async (req, res) => {
+BlogController.createPost = async (req, res) => {
 	try {
 		const post = await Repository.createBlog(req.body, req.userData.id);
 		res.status(201).send({
@@ -45,7 +45,7 @@ PostController.createPost = async (req, res) => {
 	}
 };
 
-PostController.deletePost = async (req, res) => {
+BlogController.deletePost = async (req, res) => {
 	try {
 		const post = await Repository.deleteBlog(req.params.id);
 		res.status(200).send(post);
@@ -55,5 +55,5 @@ PostController.deletePost = async (req, res) => {
 	}
 };
 
-module.exports = PostController;
+module.exports = BlogController;
 
