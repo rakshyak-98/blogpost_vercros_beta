@@ -1,6 +1,16 @@
 const Repository = require("../lib/repository");
 function PostController() {}
 
+PostController.editPost = async (req, res) => {
+	try {
+		const post = await Repository.editBlog(req.body, req.params.id);
+		res.status(200).send(post);
+	} catch (error) {
+		res.status(400).send(error.message);
+		return;
+	}
+};
+
 PostController.getPostById = async (req, res) => {
 	try {
 		const post = await Repository.getBlogById(req.params.id);
