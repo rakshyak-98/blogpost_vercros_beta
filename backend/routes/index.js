@@ -5,7 +5,7 @@ const BlogRoutes = require("./blogRoutes");
 Router.post("/signUp", UserController.createUser);
 Router.post("/signIn", UserController.signIn);
 Router.post("/profile", UserController.checkUserToken, UserController.createProfile);
-Router.use("/post", BlogRoutes);
+Router.use("/blog", BlogRoutes);
 
 module.exports = Router;
 
