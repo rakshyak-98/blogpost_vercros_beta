@@ -9,9 +9,9 @@ function Repository() {}
 
 Repository.editBlog = async (data, id) => {
 	const schema = zod.object({
-		title: zod.string().min(3).max(50),
-		description: zod.string().min(3).max(10000),
-		image: zod.string().min(3),
+		title: zod.string().min(3).max(50).optional(),
+		description: zod.string().min(3).max(10000).optional(),
+		image: zod.string().min(3).optional(),
 	});
 	const validation = schema.safeParse(data);
 	if (!validation.success) {
