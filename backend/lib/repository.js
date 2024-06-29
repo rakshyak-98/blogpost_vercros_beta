@@ -10,8 +10,8 @@ function Repository() {}
 Repository.createPost = async (data, userRef) => {
 	const schema = zod.object({
 		title: zod.string().min(3).max(50),
-		description: zod.string().min(3).max(50),
-		image: zod.string().min(3).max(50),
+		description: zod.string().min(3).max(10000),
+		image: zod.string().min(3),
 	});
 	const validation = schema.safeParse(data);
 	if (!validation.success) {
