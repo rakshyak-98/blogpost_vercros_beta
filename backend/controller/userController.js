@@ -1,4 +1,5 @@
 const Repository = require("../lib/repository");
+const CONFIG = require("../config");
 
 function UserController() {}
 
@@ -23,7 +24,7 @@ UserController.signIn = async function (req, res) {
 UserController.createUser = async function (req, res) {
 	try {
 		const newUser = await Repository.createUser({
-			username: req.body.username,
+			username: req.body.email,
 			password: req.body.password,
 		});
 		res.status(201).send(Repository.generateToken(newUser));
@@ -46,7 +47,7 @@ UserController.checkUserToken = async function (req, res, next) {
 		const decode = Repository.verifyToken(token);
 		req.userData = decode;
 	} catch (error) {
-		res.status(401).send("TOKEN_NOT_VALID");
+		res.status(401).send(error.message);
 		return;
 	}
 	next();

@@ -12,6 +12,12 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useState} from "react";
+import {Navigate} from "react-router-dom";
+import {setAlert} from "./actions/alert";
+import {login} from "./actions/auth";
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
 
 function Copyright(props) {
     return (
@@ -30,14 +36,21 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-    const handleSubmit = (event) => {
+const SignIn = ({setAlert, login, isAuthenticated}) => {
+    const [formData, setFormData] = useState({
+        email:'',
+        password:'',
+    })
+    const { name, email,password} = formData;
+    const onChange = (e) =>
+        setFormData({...formData,[e.target.name]:e.target.value});
+
+    const handleSubmit = async (event) => {
+        login(email, password);
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        if(isAuthenticated) {
+            return <Navigate to='/'/>
+        }
     };
 
     return (
@@ -68,6 +81,8 @@ export default function SignIn() {
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            value={email}
+                            onChange={(e) => onChange(e)}
                         />
                         <TextField
                             margin="normal"
@@ -78,6 +93,8 @@ export default function SignIn() {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={password}
+                            onChange={(e) => onChange(e)}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary" />}
@@ -110,3 +127,15 @@ export default function SignIn() {
         </ThemeProvider>
     );
 }
+
+SignIn.propTypes = {
+    setAlert: PropTypes.func.isRequired,
+    login: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
+}
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated
+})
+
+export default connect(mapStateToProps,{setAlert, login}) (SignIn);

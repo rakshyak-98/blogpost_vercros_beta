@@ -68,7 +68,7 @@ Repository.createProfile = async (data, userRef) => {
 };
 
 Repository.checkUser = async (data) => {
-	return await User.findOne({ username: data.username });
+	return await User.findOne({ username: data.email });
 };
 
 Repository.createUser = async function (user) {

@@ -6,23 +6,24 @@ import Blog from "./Blog";
 import {Fragment} from "react";
 import Post1 from "./Posts/Post1";
 import BlogEditor from "./blogEditor/BlogEditor";
+import {Provider} from 'react-redux';
+import store from './store'
 
 const App = () => {
     return (
-        <Router>
-            <Fragment>
-                <Routes>
-                    <Route path="/signin" Component={SignIn}/>
-                    <Route path="/signup" Component={SignUp}/>
-                    <Route path="/" Component={Blog}/>
-                    <Route path="/blog/post1" Component={Post1}/>
-                    <Route path="/blog/editor" Component={BlogEditor}/>
-                </Routes>
-            </Fragment>
-        </Router>
-        //TODO: HomePage
-        //TODO: Category Page
-        //TODO: Filtering and Search
+        <Provider store={store}>
+            <Router>
+                <Fragment>
+                    <Routes>
+                        <Route path="/signin" Component={SignIn}/>
+                        <Route path="/signup" Component={SignUp}/>
+                        <Route path="/" Component={Blog}/>
+                        <Route path="/blog/post1" Component={Post1}/>
+                        <Route path="/blog/editor" Component={BlogEditor}/>
+                    </Routes>
+                </Fragment>
+            </Router>
+        </Provider>
     );
 }
 

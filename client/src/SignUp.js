@@ -1,4 +1,6 @@
 import * as React from 'react';
+import {connect} from "react-redux";
+import {Navigate} from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,32 +12,48 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {Fragment, useState} from "react";
+import PropTypes from "prop-types";
+import {setAlert} from "./actions/alert"
+import {register} from "./actions/auth";
 
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
-                Your Website
+                Daily Blog
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
     );
 }
-
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
-export default function SignIn() {
-    const handleSubmit = (event) => {
+const SignUp = ({setAlert, register, isAuthenticated}) => {
+
+    const [formData, setFormData] = useState({
+        email:'',
+        password:'',
+        password2:''
+    })
+
+    const { name, email,password, password2} = formData;
+    const onChange = (e) =>
+        setFormData({...formData,[e.target.name]:e.target.value});
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        if(password !== password2){
+            setAlert('Password do not match','danger');
+        }else{
+            register(email, password);
+        }
+
+        if(isAuthenticated) {
+            return <Navigate to='/'/>
+        };
     };
 
     return (
@@ -65,10 +83,31 @@ export default function SignIn() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
+                            value={email}
+                            onChange={(e)=>onChange(e)}
                             autoFocus
                         />
-
-
+                        <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="password"
+                        type="password"
+                        label="Password"
+                        name="password"
+                        value={password}
+                        onChange={(e) => onChange(e)}
+                    /><TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="password2"
+                        type="password"
+                        label="Confirm Password"
+                        name="password2"
+                        value={password2}
+                        onChange={(e) => onChange(e)}
+                    />
                         <Button
                             type="submit"
                             fullWidth
@@ -79,12 +118,12 @@ export default function SignIn() {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">
+                                <Link href='/signin' variant="body2">
                                     Already have an account?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href='/signin' variant="body2">
                                     {"Sign In"}
                                 </Link>
                             </Grid>
@@ -96,3 +135,15 @@ export default function SignIn() {
         </ThemeProvider>
     );
 }
+
+SignUp.propTypes = {
+    setAlert : PropTypes.func.isRequired,
+    register: PropTypes.func.isRequired,
+    isAuthenticated: PropTypes.bool
+};
+
+const mapStateToProps = (state) => ({
+    isAuthenticated: state.auth.isAuthenticated,
+});
+
+export default connect(mapStateToProps,{setAlert, register})(SignUp)
