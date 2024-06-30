@@ -9,7 +9,9 @@ const Share = require("../models/ShareModel");
 function Repository() {}
 
 Repository.getBlogShareWithMe = async (userRefId) => {
-	const share = await Share.find({ userRef: userRefId }, { __v: 0 }).populate("userRef");
+	const share = await Share.find({ userRef: userRefId }, { __v: 0 })
+		.populate("userRef")
+		.populate("blog");
 	if (!share) {
 		throw new Error("SHARE_NOT_FOUND");
 	}
@@ -27,7 +29,7 @@ Repository.createShare = async (data) => {
 		throw new Error(validation.error);
 	}
 	const newShare = await Share.create(data);
-	await Profile.findByIdAndUpdate(userRef, {blogRef: data.blog})
+	await Profile.findByIdAndUpdate(userRef, { blogRef: data.blog });
 	return newShare;
 };
 
@@ -65,7 +67,7 @@ Repository.getBlogById = async (id) => {
 
 Repository.getAllBlog = async (userRef) => {
 	// TODO: paginate this
-	const posts = await Blog.find({userRef: userRef}, { __v: 0, userRef: 0 });
+	const posts = await Blog.find({ userRef: userRef }, { __v: 0, userRef: 0 });
 	return posts;
 };
 
