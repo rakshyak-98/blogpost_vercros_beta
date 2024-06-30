@@ -28,6 +28,15 @@ Repository.createShare = async (data, ownerRef) => {
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
+	const shareAlreadyExist = await Share.findOne({
+		blog: data.blog,
+		shareWith: data.shareWith,
+	});
+
+	if(shareAlreadyExist){
+		throw new Error("SHARE_ALREADY_EXIST");
+	}
+
 	const newShare = await Share.create({ ...data, owner: ownerRef });
 	return {
 		id: newShare._id,
@@ -36,6 +45,18 @@ Repository.createShare = async (data, ownerRef) => {
 		accessPermission: newShare.accessPermission,
 		shareWith: newShare.shareWith,
 	};
+};
+
+Repository.editShare = async(data, id) => {
+	const schema = zod.object({
+		accessPermission: zod.enum(["view", "edit"]).optional(),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const share = await Share.findByIdAndUpdate(id, data, { new: true });
+	return share;
 };
 
 Repository.editBlog = async (data, id) => {
