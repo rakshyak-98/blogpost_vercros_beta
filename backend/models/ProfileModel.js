@@ -15,6 +15,12 @@ const ProfileSchema = new mongoose.Schema({
 		required: true,
         unique: true,
 	},
+	blogRef: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Blogs",
+		},
+	]
 });
 
 module.exports = mongoose.model("Profile", ProfileSchema);

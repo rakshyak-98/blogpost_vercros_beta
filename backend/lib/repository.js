@@ -27,6 +27,7 @@ Repository.createShare = async (data) => {
 		throw new Error(validation.error);
 	}
 	const newShare = await Share.create(data);
+	await Profile.findByIdAndUpdate(userRef, {blogRef: data.blog})
 	return newShare;
 };
 
@@ -62,9 +63,9 @@ Repository.getBlogById = async (id) => {
 	return await Blog.findById(id, { __v: 0, userRef: 0 });
 };
 
-Repository.getAllBlog = async () => {
+Repository.getAllBlog = async (userRef) => {
 	// TODO: paginate this
-	const posts = await Blog.find({}, { __v: 0, userRef: 0 });
+	const posts = await Blog.find({userRef: userRef}, { __v: 0, userRef: 0 });
 	return posts;
 };
 
