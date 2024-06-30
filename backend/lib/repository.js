@@ -33,7 +33,7 @@ Repository.createShare = async (data, ownerRef) => {
 		shareWith: data.shareWith,
 	});
 
-	if(shareAlreadyExist){
+	if (shareAlreadyExist) {
 		throw new Error("SHARE_ALREADY_EXIST");
 	}
 
@@ -41,21 +41,29 @@ Repository.createShare = async (data, ownerRef) => {
 	return {
 		id: newShare._id,
 		owner: newShare.owner,
-		blogRef: newShare.blog,
+		blog: newShare.blog,
 		accessPermission: newShare.accessPermission,
 		shareWith: newShare.shareWith,
 	};
 };
 
-Repository.editShare = async(data, id) => {
+Repository.editShareByUserId = async (data) => {
 	const schema = zod.object({
-		accessPermission: zod.enum(["view", "edit"]).optional(),
+		blog: zod.string().min(24).max(24),
+		userRef: zod.string().min(24).max(24).optional(),
 	});
 	const validation = schema.safeParse(data);
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const share = await Share.findByIdAndUpdate(id, data, { new: true });
+	const share = await Share.findOneAndUpdate(
+		{ blog: data.blog, accessPermission: "edit" },
+		data,
+		{ new: true }
+	);
+	if (share === null) {
+		throw new Error("BLOG_NOT_SHARED");
+	}
 	return share;
 };
 
@@ -83,27 +91,27 @@ Repository.createBlog = async (data, userRef) => {
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const newPost = await Blog.create({ ...data, userRef: userRef });
+	const newPost = await Blog.create({ ...data, createdBy: userRef });
 	return newPost;
 };
 
 Repository.getBlogById = async (id) => {
-	return await Blog.findById(id, { __v: 0, userRef: 0 });
+	return await Blog.findById(id, { __v: 0, createdBy: 0 });
 };
 
 Repository.getAllBlog = async (userRef) => {
 	// TODO: paginate this
-	const posts = await Blog.find({ userRef: userRef }, { __v: 0, userRef: 0 });
+	const posts = await Blog.find({ createdBy: userRef }, { __v: 0, createdBy: 0 });
 	return posts;
 };
 
-Repository.deleteBlog = async (id) => {
-	const post = await Blog.findById(id, { _id: 1 });
-	if (!post) {
-		throw new Error("POST_NOT_FOUND");
+Repository.deleteBlog = async (blogId) => {
+	const blog = await Blog.findById(blogId, { _id: 1 });
+	if (!blog) {
+		throw new Error("BLOG_NOT_FOUND");
 	}
-	await post.deleteOne();
-	return post;
+	await blog.deleteOne();
+	return blog;
 };
 
 Repository.createProfile = async (data, userRef) => {
@@ -115,7 +123,7 @@ Repository.createProfile = async (data, userRef) => {
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const newProfile = await Profile.create({ ...data, userRef: userRef });
+	const newProfile = await Profile.create({ ...data, createdBy: userRef });
 	return newProfile;
 };
 
