@@ -9,9 +9,9 @@ const Share = require("../models/ShareModel");
 function Repository() {}
 
 Repository.getBlogShareWithMe = async (userRefId) => {
-	const share = await Share.find({ shareWith: userRefId }, { __v: 0 })
-		.populate("userRef")
-		.populate("blog");
+	const share = await Share.find({ shareWith: userRefId }, { __v: 0, shareWith: 0 }).populate(
+		"blog"
+	);
 	if (!share) {
 		throw new Error("SHARE_NOT_FOUND");
 	}

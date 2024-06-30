@@ -3,7 +3,7 @@ function ShareController() {}
 
 ShareController.editShareByMe = async function (req, res) {
 	try {
-		const share = await Repository.editShareByUserId(req.body, req.userData.id);
+		const share = await Repository.editShareByUserId(req.body);
 		res.status(200).send(share);
 	} catch (error) {
 		res.status(400).send(error.message);
