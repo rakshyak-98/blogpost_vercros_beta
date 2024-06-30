@@ -16,6 +16,7 @@ import {Fragment, useState} from "react";
 import PropTypes from "prop-types";
 import {setAlert} from "./actions/alert"
 import {register} from "./actions/auth";
+import MaterialTheme from './/material-theme.json'
 
 function Copyright(props) {
     return (
@@ -29,7 +30,7 @@ function Copyright(props) {
         </Typography>
     );
 }
-const defaultTheme = createTheme();
+const defaultTheme = createTheme(MaterialTheme);
 
 const SignUp = ({setAlert, register, isAuthenticated}) => {
 

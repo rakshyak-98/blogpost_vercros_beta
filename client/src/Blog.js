@@ -17,6 +17,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
+import MaterialTheme from './/material-theme.json'
+import material from "./material";
 
 
 const sections = [
@@ -36,7 +38,7 @@ const mainFeaturedPost = {
     title: 'Title of a longer featured blog post',
     description:
         "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-    image: 'https://source.unsplash.com/random?wallpapers',
+    image: 'https://picsum.photos/800/300',
     imageText: 'main image description',
     linkText: 'Continue reading…',
 };
@@ -47,7 +49,7 @@ const featuredPosts = [
         date: 'Nov 12',
         description:
             'This is a wider card with supporting text below as a natural lead-in to additional content.',
-        image: 'https://source.unsplash.com/random?wallpapers',
+        image: 'https://picsum.photos/200/220',
         imageLabel: 'Image Text',
     },
     {
@@ -55,7 +57,7 @@ const featuredPosts = [
         date: 'Nov 11',
         description:
             'This is a wider card with supporting text below as a natural lead-in to additional content.',
-        image: 'https://source.unsplash.com/random?wallpapers',
+        image: 'https://picsum.photos/200/200',
         imageLabel: 'Image Text',
     },
 ];
@@ -85,7 +87,11 @@ const sidebar = {
 };
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
+const defaultTheme = createTheme(MaterialTheme);
+
+function getLight() {
+    return material().dark;
+}
 
 const Scrolling = () => {
     return (
@@ -98,15 +104,15 @@ const Scrolling = () => {
         >
             {map(range(4), _ => (
                 <CardActionArea component="a" href="#">
-                <Card sx={{display: "flex", background:'linear-gradient(to right, rgba(255,255,255,1), rgba(0,0,255,0.2))', marginBottom:"12px"}}>
-                    <CardContent sx={{flex: 1, display: "flex"}}>
-                        <div><Typography component="h2" variant="h5">
+                <Card sx={{display: "flex", marginBottom:"12px"}}>
+                    <CardContent sx={{flex: 1, display: "flex", background:`${getLight().tertiary}`}}>
+                        <div><Typography component="h2" variant="h5" color={getLight().onTertiary}>
                             This is a blog
                         </Typography>
-                            <Typography variant="subtitle1" color="text.secondary">
+                            <Typography variant="subtitle1" color={getLight().onTertiary}>
                                 How it started
                             </Typography>
-                            <Typography variant="subtitle1" paragraph>
+                            <Typography variant="subtitle1" paragraph color={getLight().onTertiary}>
                                 It all started with a spark, that ignited and made many possibilities visible
                             </Typography>
                             <Typography variant="subtitle1" color="primary">
@@ -121,12 +127,13 @@ const Scrolling = () => {
     )
 }
 
+
 export default function Blog() {
     return (
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline/>
-            <Container maxWidth="lg">
-                <Header title="DailyBlog" sections={sections}/>
+            <Container maxWidth="lg" >
+                <Header title="DailyBlog" sections={sections} loggedIn = {true}/>
                 <main>
                     <MainFeaturedPost post={mainFeaturedPost}/>
                     <Grid container spacing={4}>

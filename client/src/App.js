@@ -8,18 +8,22 @@ import Post1 from "./Posts/Post1";
 import BlogEditor from "./blogEditor/BlogEditor";
 import {Provider} from 'react-redux';
 import store from './store'
+import Dashboard from "./Dashboard";
+import {Helmet} from 'react-helmet';
+import material from "./material";
 
 const App = () => {
     return (
         <Provider store={store}>
             <Router>
-                <Fragment>
+            <Fragment>
                     <Routes>
                         <Route path="/signin" Component={SignIn}/>
                         <Route path="/signup" Component={SignUp}/>
                         <Route path="/" Component={Blog}/>
                         <Route path="/blog/post1" Component={Post1}/>
                         <Route path="/blog/editor" Component={BlogEditor}/>
+                        <Route path="/dashboard" Component={Dashboard}/>
                     </Routes>
                 </Fragment>
             </Router>
