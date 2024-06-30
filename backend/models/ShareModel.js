@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const ShareSchema = new mongoose.Schema({
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		userRef: "User",
+		required: true,
+	},
 	blog: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Blogs",
@@ -11,7 +16,7 @@ const ShareSchema = new mongoose.Schema({
 		required: true,
 		enumValues: ["view", "edit"],
 	},
-	userRef: [
+	shareWith: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",

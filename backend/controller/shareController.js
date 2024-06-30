@@ -3,12 +3,8 @@ function ShareController() {}
 
 ShareController.createShare = async function (req, res) {
 	try {
-		const newShare = await Repository.createShare(req.body);
-		res.status(201).send({
-			id: newShare._id,
-			userRef: newShare.userRef,
-			accessPermissions: newShare.accessPermission,
-		});
+		const newShare = await Repository.createShare(req.body, req.userData.id);
+		res.status(201).send(newShare);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}

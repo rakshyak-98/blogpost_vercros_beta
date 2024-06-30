@@ -9,7 +9,7 @@ const Share = require("../models/ShareModel");
 function Repository() {}
 
 Repository.getBlogShareWithMe = async (userRefId) => {
-	const share = await Share.find({ userRef: userRefId }, { __v: 0 })
+	const share = await Share.find({ shareWith: userRefId }, { __v: 0 })
 		.populate("userRef")
 		.populate("blog");
 	if (!share) {
@@ -18,19 +18,24 @@ Repository.getBlogShareWithMe = async (userRefId) => {
 	return share;
 };
 
-Repository.createShare = async (data) => {
+Repository.createShare = async (data, ownerRef) => {
 	const schema = zod.object({
 		blog: zod.string().min(24).max(24),
 		accessPermission: zod.enum(["view", "edit"]),
-		userRef: zod.array(zod.string().min(24).max(24)),
+		shareWith: zod.array(zod.string().min(24).max(24)),
 	});
 	const validation = schema.safeParse(data);
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const newShare = await Share.create(data);
-	await Profile.findByIdAndUpdate(userRef, { blogRef: data.blog });
-	return newShare;
+	const newShare = await Share.create({ ...data, owner: ownerRef });
+	return {
+		id: newShare._id,
+		owner: newShare.owner,
+		blogRef: newShare.blog,
+		accessPermission: newShare.accessPermission,
+		shareWith: newShare.shareWith,
+	};
 };
 
 Repository.editBlog = async (data, id) => {
