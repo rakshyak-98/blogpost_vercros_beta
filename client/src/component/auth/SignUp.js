@@ -11,12 +11,13 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Fragment, useState} from "react";
 import PropTypes from "prop-types";
-import {setAlert} from "./actions/alert"
-import {register} from "./actions/auth";
-import MaterialTheme from './/material-theme.json'
+import {setAlert} from "../../actions/alert"
+import {register} from "../../actions/auth";
+import MaterialTheme from '../../material-theme.json'
+import {Link as ReduxLink} from 'react-router-dom'
 
 function Copyright(props) {
     return (
@@ -30,37 +31,34 @@ function Copyright(props) {
         </Typography>
     );
 }
+
 const defaultTheme = createTheme(MaterialTheme);
 
 const SignUp = ({setAlert, register, isAuthenticated}) => {
 
     const [formData, setFormData] = useState({
-        email:'',
-        password:'',
-        password2:''
+        email: '',
+        password: '',
+        password2: ''
     })
 
-    const { name, email,password, password2} = formData;
+    const {name, email, password, password2} = formData;
     const onChange = (e) =>
-        setFormData({...formData,[e.target.name]:e.target.value});
+        setFormData({...formData, [e.target.name]: e.target.value});
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if(password !== password2){
-            setAlert('Password do not match','danger');
-        }else{
+        if (password !== password2) {
+            setAlert('Password do not match', 'danger');
+        } else {
             register(email, password);
         }
-
-        if(isAuthenticated) {
-            return <Navigate to='/'/>
-        };
     };
 
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
-                <CssBaseline />
+                <CssBaseline/>
                 <Box
                     sx={{
                         marginTop: 8,
@@ -69,13 +67,13 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign Up
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField
                             margin="normal"
                             required
@@ -85,20 +83,20 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                             name="email"
                             autoComplete="email"
                             value={email}
-                            onChange={(e)=>onChange(e)}
+                            onChange={(e) => onChange(e)}
                             autoFocus
                         />
                         <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="password"
-                        type="password"
-                        label="Password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => onChange(e)}
-                    /><TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="password"
+                            type="password"
+                            label="Password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => onChange(e)}
+                        /><TextField
                         margin="normal"
                         required
                         fullWidth
@@ -113,32 +111,37 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{mt: 3, mb: 2}}
                         >
                             Sign Up
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href='/signin' variant="body2">
-                                    Already have an account?
-                                </Link>
+                                <ReduxLink to="/signIn">
+                                    <Link variant="body2">
+                                        Already have an account?
+                                    </Link>
+                                </ReduxLink>
                             </Grid>
                             <Grid item>
-                                <Link href='/signin' variant="body2">
-                                    {"Sign In"}
-                                </Link>
+                                <ReduxLink to="/signIn">
+                                    <Link variant="body2">
+                                        {"Sign In"}
+                                    </Link>
+                                </ReduxLink>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
-                <Copyright sx={{ mt: 8, mb: 4 }} />
+                <Copyright sx={{mt: 8, mb: 4}}/>
+                { isAuthenticated && <Navigate to='/dashboard'/> }
             </Container>
         </ThemeProvider>
     );
 }
 
 SignUp.propTypes = {
-    setAlert : PropTypes.func.isRequired,
+    setAlert: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool
 };
@@ -147,4 +150,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps,{setAlert, register})(SignUp)
+export default connect(mapStateToProps, {setAlert, register})(SignUp)

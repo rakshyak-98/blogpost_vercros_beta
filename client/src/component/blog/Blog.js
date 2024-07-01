@@ -6,7 +6,6 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import XIcon from '@mui/icons-material/X';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import Header from './Header';
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
 import Sidebar from './Sidebar';
@@ -17,22 +16,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import MaterialTheme from './/material-theme.json'
-import material from "./material";
-
-
-const sections = [
-    {title: 'Technology', url: '#'},
-    {title: 'Design', url: '#'},
-    {title: 'Culture', url: '#'},
-    {title: 'Business', url: '#'},
-    {title: 'Politics', url: '#'},
-    {title: 'Opinion', url: '#'},
-    {title: 'Science', url: '#'},
-    {title: 'Health', url: '#'},
-    {title: 'Style', url: '#'},
-    {title: 'Travel', url: '#'},
-];
+import MaterialTheme from '../../material-theme.json'
+import material from "../../material";
 
 const mainFeaturedPost = {
     title: 'Title of a longer featured blog post',
@@ -86,7 +71,6 @@ const sidebar = {
     ],
 };
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme(MaterialTheme);
 
 function getLight() {
@@ -102,8 +86,8 @@ const Scrolling = () => {
                   },
               }}
         >
-            {map(range(4), _ => (
-                <CardActionArea component="a" href="#">
+            {map(range(4), (index) => (
+                <CardActionArea key={index} component="a" href="/blog/post3">
                 <Card sx={{display: "flex", marginBottom:"12px"}}>
                     <CardContent sx={{flex: 1, display: "flex", background:`${getLight().tertiary}`}}>
                         <div><Typography component="h2" variant="h5" color={getLight().onTertiary}>
@@ -133,7 +117,6 @@ export default function Blog() {
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline/>
             <Container maxWidth="lg" >
-                <Header title="DailyBlog" sections={sections} loggedIn = {true}/>
                 <main>
                     <MainFeaturedPost post={mainFeaturedPost}/>
                     <Grid container spacing={4}>

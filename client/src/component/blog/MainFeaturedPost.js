@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-import material from "./material";
+import material from "../../material";
 
 interface MainFeaturedPostProps {
     post: {
@@ -58,7 +58,7 @@ export default function MainFeaturedPost(props: MainFeaturedPostProps) {
                         <Typography variant="h5" color={material().light.onSecondary} paragraph>
                             {post.description}
                         </Typography>
-                        <Link variant="subtitle1" href="#">
+                        <Link variant="subtitle1" href="/blog/post1">
                             {post.linkText}
                         </Link>
                     </Box>

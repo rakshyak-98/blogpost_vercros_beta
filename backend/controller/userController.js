@@ -27,7 +27,7 @@ UserController.createUser = async function (req, res) {
 			username: req.body.email,
 			password: req.body.password,
 		});
-		res.status(201).send(Repository.generateToken(newUser));
+		res.status(201).send(Repository.getTokens(newUser));
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
@@ -51,6 +51,7 @@ UserController.checkUserToken = async function (req, res, next) {
 		return;
 	}
 	next();
+	return res.status(200).send(req.userData);
 };
 
 module.exports = UserController;

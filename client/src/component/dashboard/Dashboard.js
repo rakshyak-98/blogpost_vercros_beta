@@ -21,7 +21,7 @@ import { mainListItems, secondaryListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import MaterialTheme from './/material-theme.json';
+import MaterialTheme from '../../material-theme.json';
 
 function Copyright(props) {
     return (

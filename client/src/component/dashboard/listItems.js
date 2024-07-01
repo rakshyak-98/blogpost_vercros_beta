@@ -9,18 +9,27 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import {HomeMaxTwoTone, HomeMini, HouseRounded} from "@mui/icons-material";
+import {AddBox, HouseRounded} from "@mui/icons-material";
+import {Link} from 'react-router-dom'
 
 export const mainListItems = (
     <React.Fragment>
-        <a href="/">
+        <Link to="/">
             <ListItemButton>
                 <ListItemIcon>
                     <HouseRounded/>
                 </ListItemIcon>
                 <ListItemText primary="Home"/>
             </ListItemButton>
-        </a>
+        </Link>
+        <Link to="/blog/editor">
+            <ListItemButton>
+                <ListItemIcon>
+                    <AddBox/>
+                </ListItemIcon>
+                <ListItemText primary="New Blog"/>
+            </ListItemButton>
+        </Link>
         <ListItemButton>
             <ListItemIcon>
                 <DashboardIcon/>

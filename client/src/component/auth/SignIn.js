@@ -14,10 +14,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useState} from "react";
 import {Navigate} from "react-router-dom";
-import {setAlert} from "./actions/alert";
-import {login} from "./actions/auth";
+import {setAlert} from "../../actions/alert";
+import {login} from "../../actions/auth";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
+import {Link as ReduxLink} from 'react-router-dom';
 
 function Copyright(props) {
     return (
@@ -36,21 +37,18 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-const SignIn = ({setAlert, login, isAuthenticated}) => {
+const SignIn = ({login, isAuthenticated}) => {
     const [formData, setFormData] = useState({
         email:'',
         password:'',
     })
-    const { name, email,password} = formData;
+    const { email,password} = formData;
     const onChange = (e) =>
         setFormData({...formData,[e.target.name]:e.target.value});
 
     const handleSubmit = async (event) => {
         login(email, password);
         event.preventDefault();
-        if(isAuthenticated) {
-            return <Navigate to='/'/>
-        }
     };
 
     return (
@@ -110,18 +108,22 @@ const SignIn = ({setAlert, login, isAuthenticated}) => {
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    Forgot password?
-                                </Link>
+                                <ReduxLink to="#">
+                                    <Link href="#" variant="body2">
+                                        Forgot password?
+                                    </Link>
+                                </ReduxLink>
+
                             </Grid>
                             <Grid item>
-                                <Link href="/signup" variant="body2">
+                                <ReduxLink to="/signup"><Link  variant="body2">
                                     {"Don't have an account? Sign Up"}
-                                </Link>
+                                </Link></ReduxLink>
                             </Grid>
                         </Grid>
                     </Box>
                 </Box>
+                { isAuthenticated && <Navigate to='/dashboard'/> }
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
         </ThemeProvider>
@@ -129,7 +131,6 @@ const SignIn = ({setAlert, login, isAuthenticated}) => {
 }
 
 SignIn.propTypes = {
-    setAlert: PropTypes.func.isRequired,
     login: PropTypes.func.isRequired,
     isAuthenticated: PropTypes.bool
 }
@@ -138,4 +139,4 @@ const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated
 })
 
-export default connect(mapStateToProps,{setAlert, login}) (SignIn);
+export default connect(mapStateToProps,{login}) (SignIn);
