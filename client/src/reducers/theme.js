@@ -3,7 +3,7 @@ import {
 } from "../actions/types";
 
 const initialState = {
-    darkTheme: true,
+    darkTheme: false,
 };
 
 export default function reducer(state = initialState, action) {

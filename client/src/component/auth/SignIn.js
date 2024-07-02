@@ -12,13 +12,14 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Navigate} from "react-router-dom";
-import {setAlert} from "../../actions/alert";
 import {login} from "../../actions/auth";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {Link as ReduxLink} from 'react-router-dom';
+import Material from '../..//material-theme.json'
+import material from "../../material";
 
 function Copyright(props) {
     return (
@@ -33,11 +34,9 @@ function Copyright(props) {
     );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
-const SignIn = ({login, isAuthenticated}) => {
+const SignIn = ({login, isAuthenticated, darkTheme}) => {
     const [formData, setFormData] = useState({
         email:'',
         password:'',
@@ -51,6 +50,14 @@ const SignIn = ({login, isAuthenticated}) => {
         event.preventDefault();
     };
 
+
+    useEffect(() => {
+
+    }, [darkTheme]);
+
+    function getLight() {
+        return darkTheme?material().dark:material().light;
+    }
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -63,14 +70,16 @@ const SignIn = ({login, isAuthenticated}) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <Avatar sx={{ m: 1, bgcolor: getLight().primary, color: getLight().onPrimary}}>
                         <LockOutlinedIcon />
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" color={getLight().onSurface}>
                         Sign in
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField
+                            sx={{ bgcolor: getLight().surfaceVariant, input : { color:`${getLight().onBackground}` }}}
+                            background="blue"
                             margin="normal"
                             required
                             fullWidth
@@ -83,6 +92,7 @@ const SignIn = ({login, isAuthenticated}) => {
                             onChange={(e) => onChange(e)}
                         />
                         <TextField
+                            sx={{ bgcolor: getLight().surfaceVariant, input : { color:`${getLight().onBackground}` }}}
                             margin="normal"
                             required
                             fullWidth
@@ -95,14 +105,16 @@ const SignIn = ({login, isAuthenticated}) => {
                             onChange={(e) => onChange(e)}
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox value="remember" sx={{  color: getLight().onSurface }}/>}
                             label="Remember me"
+                            sx={{  color: getLight().onSurface }}
+
                         />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2,bgcolor: getLight().primary, color: getLight().onPrimary }}
                         >
                             Sign In
                         </Button>
@@ -132,11 +144,13 @@ const SignIn = ({login, isAuthenticated}) => {
 
 SignIn.propTypes = {
     login: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool
+    isAuthenticated: PropTypes.bool,
+    darkTheme: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => ({
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
+    darkTheme: state.theme.darkTheme,
 })
 
 export default connect(mapStateToProps,{login}) (SignIn);

@@ -22,7 +22,7 @@ export const mainListItems = (
                 <ListItemText primary="Home"/>
             </ListItemButton>
         </Link>
-        <Link to="/blog/editor">
+        <Link to="/blog/post">
             <ListItemButton>
                 <ListItemIcon>
                     <AddBox/>

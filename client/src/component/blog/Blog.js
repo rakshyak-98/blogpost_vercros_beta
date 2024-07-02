@@ -18,6 +18,7 @@ import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 import MaterialTheme from '../../material-theme.json'
 import material from "../../material";
+import Scrolling from "./Scrolling";
 
 const mainFeaturedPost = {
     title: 'Title of a longer featured blog post',
@@ -72,45 +73,6 @@ const sidebar = {
 };
 
 const defaultTheme = createTheme(MaterialTheme);
-
-function getLight() {
-    return material().dark;
-}
-
-const Scrolling = () => {
-    return (
-        <Grid item xs={12} md={8}
-              sx={{
-                  '& .markdown': {
-                      py: 3,
-                  },
-              }}
-        >
-            {map(range(4), (index) => (
-                <CardActionArea key={index} component="a" href="/blog/post3">
-                <Card sx={{display: "flex", marginBottom:"12px"}}>
-                    <CardContent sx={{flex: 1, display: "flex", background:`${getLight().tertiary}`}}>
-                        <div><Typography component="h2" variant="h5" color={getLight().onTertiary}>
-                            This is a blog
-                        </Typography>
-                            <Typography variant="subtitle1" color={getLight().onTertiary}>
-                                How it started
-                            </Typography>
-                            <Typography variant="subtitle1" paragraph color={getLight().onTertiary}>
-                                It all started with a spark, that ignited and made many possibilities visible
-                            </Typography>
-                            <Typography variant="subtitle1" color="primary">
-                                Continue reading...
-                            </Typography></div>
-                    </CardContent>
-                </Card>
-            </CardActionArea>
-            ))}
-
-        </Grid>
-    )
-}
-
 
 export default function Blog() {
     return (

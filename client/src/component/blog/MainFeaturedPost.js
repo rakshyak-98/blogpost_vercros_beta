@@ -5,6 +5,10 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import material from "../../material";
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
+import {setTheme} from "../../actions/theme";
+import {useEffect} from "react";
 
 interface MainFeaturedPostProps {
     post: {
@@ -14,11 +18,20 @@ interface MainFeaturedPostProps {
         linkText: string;
         title: string;
     };
+    darkTheme:boolean;
 }
 
-export default function MainFeaturedPost(props: MainFeaturedPostProps) {
-    const { post } = props;
 
+const MainFeaturedPost = (props: MainFeaturedPostProps) => {
+    const { post , darkTheme} = props;
+
+    useEffect(() => {
+
+    }, [darkTheme]);
+
+    function getLight() {
+        return darkTheme ? material().dark : material().light;
+    }
     return (
         <Paper
             sx={{
@@ -52,10 +65,10 @@ export default function MainFeaturedPost(props: MainFeaturedPostProps) {
                             pr: { md: 0 },
                         }}
                     >
-                        <Typography component="h1" variant="h3" color={material().light.onSecondary} gutterBottom>
+                        <Typography component="h1" variant="h3" color={getLight().onSecondary} gutterBottom>
                             {post.title}
                         </Typography>
-                        <Typography variant="h5" color={material().light.onSecondary} paragraph>
+                        <Typography variant="h5" color={getLight().onSecondary} paragraph>
                             {post.description}
                         </Typography>
                         <Link variant="subtitle1" href="/blog/post1">
@@ -67,3 +80,14 @@ export default function MainFeaturedPost(props: MainFeaturedPostProps) {
         </Paper>
     );
 }
+
+MainFeaturedPost.prototype = {
+    darkTheme: PropTypes.bool.isRequired,
+    setTheme: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+    darkTheme: state.theme.darkTheme,
+})
+
+export default connect(mapStateToProps, setTheme)(MainFeaturedPost)

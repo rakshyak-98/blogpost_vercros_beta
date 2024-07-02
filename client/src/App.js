@@ -27,18 +27,18 @@ const App = () => {
         <Provider store={store}>
             <BrowserRouter>
                 <Header title="Daily Blog"/>
-                    <Fragment>
-                        <Routes>
-                            <Route path="/signin" Component={SignIn}/>
-                            <Route path="/signup" Component={SignUp}/>
-                            <Route path="/" Component={Blog}/>
-                            <Route path="/blog/post1" Component={Post1}/>
-                            <Route path="/blog/post2" Component={Post2}/>
-                            <Route path="/blog/post3" Component={Post3}/>
-                            <Route path="/blog/post" Component={Post}/>
-                            <Route path="/dashboard" Component={Dashboard}/>
-                        </Routes>
-                    </Fragment>
+                <Fragment>
+                    <Routes>
+                        <Route path="/signin" Component={SignIn}/>
+                        <Route path="/signup" Component={SignUp}/>
+                        <Route path="/" Component={Blog}/>
+                        <Route path="/blog/post1" Component={Post1}/>
+                        <Route path="/blog/post2" Component={Post2}/>
+                        <Route path="/blog/post3" Component={Post3}/>
+                        <Route path="/blog/post" Component={Post}/>
+                        <Route path="/dashboard" Component={Dashboard}/>
+                    </Routes>
+                </Fragment>
             </BrowserRouter>
         </Provider>
     );

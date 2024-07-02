@@ -21,6 +21,8 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {logout} from "../../actions/auth";
 import {Link as ReduxLink} from 'react-router-dom'
+import {useEffect} from "react";
+import {setTheme} from "../../actions/theme";
 
 
 interface HeaderProps {
@@ -29,9 +31,12 @@ interface HeaderProps {
         url: string;
     }>;
     title: string;
+    isAuthenticated: boolean;
+    darkTheme: boolean;
+    setTheme: void;
 }
 
-const Header = (props: HeaderProps, isAuthenticated) => {
+const Header = (props: HeaderProps) => {
     // const {sections, title} = props;
     // local settings start--
     const sections = [
@@ -46,10 +51,9 @@ const Header = (props: HeaderProps, isAuthenticated) => {
         {title: 'Style', url: '#'},
         {title: 'Travel', url: '#'},
     ];
-    const {title} = props;
+    const {title, isAuthenticated, darkTheme, setTheme} = props;
     //local setitings end --
     const [open, setOpen] = React.useState(false);
-    const [dark, setTheme] = React.useState(false);
 
     const themeDark = () => {
         setTheme(false);
@@ -64,12 +68,19 @@ const Header = (props: HeaderProps, isAuthenticated) => {
         setOpen(true);
     }
 
-    const defaultTheme = createTheme(material())
+    const defaultTheme = createTheme();
 
     const handleLogout = async (event) => {
         logout();
         event.preventDefault();
     }
+
+    useEffect(() => {
+    }, [darkTheme]);
+
+    useEffect(() => {
+
+    }, [isAuthenticated]);
 
     return (
         <React.Fragment>
@@ -79,17 +90,17 @@ const Header = (props: HeaderProps, isAuthenticated) => {
                     <Toolbar sx={{
                         borderBottom: 1,
                         borderColor: 'divider',
-                        background: `${getTheme(dark).surfaceVariant}`
+                        background: `${getTheme(darkTheme).surfaceVariant}`
                     }}>
                         <Button
                             size="small"
-                            sx={{color: `${getTheme(dark).onSurfaceVariant}`}}
+                            sx={{color: `${getTheme(darkTheme).onSurfaceVariant}`}}
 
                         >Subscribe</Button>
                         <Typography
                             component="h2"
                             variant="h5"
-                            color={getTheme(dark).onSurfaceVariant}
+                            color={getTheme(darkTheme).onSurfaceVariant}
                             align="center"
                             noWrap
                             sx={{flex: 1}}
@@ -124,16 +135,16 @@ const Header = (props: HeaderProps, isAuthenticated) => {
                             </Paper>
 
                         </Backdrop>
-                        <IconButton onClick={handleOpen} sx={{color: `${getTheme(dark).primary}`}}>
+                        <IconButton onClick={handleOpen} sx={{color: `${getTheme(darkTheme).primary}`}}>
                             <SearchIcon/>
                         </IconButton>
                         {isAuthenticated ? (
                             <div>
                                 <IconButton component={ReduxLink} to="/dashboard" size="small">
-                                    <AccountCircleRounded sx={{color: `${getTheme(dark).primary}`}}/>
+                                    <AccountCircleRounded sx={{color: `${getTheme(darkTheme).primary}`}}/>
                                 </IconButton>
                                 <IconButton onClick={handleLogout} size="small">
-                                    <Logout sx={{color: `${getTheme(dark).primary}`}}/>
+                                    <Logout sx={{color: `${getTheme(darkTheme).primary}`}}/>
                                 </IconButton>
                             </div>
                         ) : (
@@ -144,13 +155,13 @@ const Header = (props: HeaderProps, isAuthenticated) => {
 
                         )}
                         <Helmet>
-                            <style>{`body { background-color: ${getTheme(dark).background}; }`}</style>
+                            <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
                         </Helmet>
-                        {dark ? (<IconButton onClick={themeDark} size="small"><WbSunnyOutlined
+                        {darkTheme ? (<IconButton onClick={themeDark} size="small"><WbSunnyOutlined
                                 sx={{color: `${material().dark.primary}`}}/></IconButton>)
                             :
                             (<IconButton size="small" onClick={themeLight}><WbSunnyRounded
-                                sx={{color: `${getTheme(dark).primary}`}}
+                                sx={{color: `${getTheme(darkTheme).primary}`}}
                             /></IconButton>)}
 
                     </Toolbar>
@@ -162,7 +173,7 @@ const Header = (props: HeaderProps, isAuthenticated) => {
                     >
                         {sections.map((section) => (
                             <Link
-                                color={getTheme(dark).onBackground}
+                                color={getTheme(darkTheme).onBackground}
                                 noWrap
                                 key={section.title}
                                 variant="body2"
@@ -170,7 +181,7 @@ const Header = (props: HeaderProps, isAuthenticated) => {
                                 sx={{p: 1, flexShrink: 0}}
                             >
                                 <Typography
-                                    color={getTheme(dark).onBackground}
+                                    color={getTheme(darkTheme).onBackground}
                                     variant="body2"
                                 >
                                     {section.title}
@@ -186,13 +197,16 @@ const Header = (props: HeaderProps, isAuthenticated) => {
 
 Header.propTypes = {
     logout: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool,
+    isAuthenticated: PropTypes.bool.isRequired,
+    setTheme: PropTypes.func.isRequired,
+    darkTheme: PropTypes.bool.isRequired,
 }
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
+    darkTheme: state.theme.darkTheme
 })
 
 
-export default connect(mapStateToProps, {logout})(Header)
+export default connect(mapStateToProps, {logout, setTheme})(Header)
 // export default  Header;

@@ -10,41 +10,31 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {useEffect} from "react";
 import {setTheme} from "../../actions/theme";
-import IconButton from "@mui/material/IconButton";
-import {ViewDay} from "@mui/icons-material";
-
 
 export const FeaturedPost = ({
                                  post: {date, description, image, imageLabel, title},
                                  darkTheme,
-                                 setTheme
                              }) => {
 
     useEffect(() => {
-        setTheme();
-    }, [setTheme]);
+    }, [darkTheme]);
 
     function getLight() {
-        return material().dark;
+        return darkTheme ? material().dark : material().light;
     }
 
     return (
         <Grid item xs={12} md={6}>
-            <IconButton onClick={(e) => {
-                return setTheme(darkTheme);
-            }}>
-                <ViewDay/>
-            </IconButton>
             <CardActionArea component="a" href="/blog/post2">
                 <Card sx={{display: 'flex'}}>
-                    <CardContent sx={{flex: 1, background: `${getLight().primaryContainer}`}}>
-                        <Typography component="h2" variant="h5" color={getLight().onPrimaryContainer}>
+                    <CardContent sx={{flex: 1, background: `${getLight().primary}`}}>
+                        <Typography component="h2" variant="h5" color={getLight().onPrimary}>
                             {title}
                         </Typography>
-                        <Typography variant="subtitle1" color={getLight().onPrimaryContainer}>
+                        <Typography variant="subtitle1" color={getLight().onPrimary}>
                             {date}
                         </Typography>
-                        <Typography variant="subtitle1" paragraph color={getLight().onPrimaryContainer}>
+                        <Typography variant="subtitle1" paragraph color={getLight().onPrimary}>
                             {description}
                         </Typography>
                         <Typography variant="subtitle1" color="primary">
@@ -64,10 +54,10 @@ export const FeaturedPost = ({
 }
 FeaturedPost.propTypes = {
     setTheme: PropTypes.func.isRequired,
-    darkTheme: PropTypes.bool,
+    darkTheme: PropTypes.bool.isRequired,
 }
 const mapStateToProps = (state) => ({
-    darkTheme: state.darkTheme,
+    darkTheme: state.theme.darkTheme,
 })
 
 export default connect(mapStateToProps, {setTheme})(FeaturedPost)

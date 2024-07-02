@@ -12,12 +12,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {setAlert} from "../../actions/alert"
 import {register} from "../../actions/auth";
 import MaterialTheme from '../../material-theme.json'
 import {Link as ReduxLink} from 'react-router-dom'
+import material from "../../material";
 
 function Copyright(props) {
     return (
@@ -34,7 +35,7 @@ function Copyright(props) {
 
 const defaultTheme = createTheme(MaterialTheme);
 
-const SignUp = ({setAlert, register, isAuthenticated}) => {
+const SignUp = ({setAlert, register, isAuthenticated, darkTheme}) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -55,6 +56,14 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
         }
     };
 
+    useEffect(() => {
+
+    }, [darkTheme]);
+
+    function getLight() {
+        return darkTheme?material().dark:material().light;
+    }
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -67,14 +76,15 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                    <Avatar sx={{ m: 1, bgcolor: getLight().primary, color: getLight().onPrimary}}>
                         <LockOutlinedIcon/>
                     </Avatar>
-                    <Typography component="h1" variant="h5">
+                    <Typography component="h1" variant="h5" color={getLight().onSurface}>
                         Sign Up
                     </Typography>
                     <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField
+                            sx={{ bgcolor: getLight().surfaceVariant, input : { color:`${getLight().onBackground}` }}}
                             margin="normal"
                             required
                             fullWidth
@@ -87,6 +97,7 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                             autoFocus
                         />
                         <TextField
+                            sx={{ bgcolor: getLight().surfaceVariant, input : { color:`${getLight().onBackground}` }}}
                             margin="normal"
                             required
                             fullWidth
@@ -97,6 +108,7 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                             value={password}
                             onChange={(e) => onChange(e)}
                         /><TextField
+                        sx={{ bgcolor: getLight().surfaceVariant, input : { color:`${getLight().onBackground}` }}}
                         margin="normal"
                         required
                         fullWidth
@@ -108,10 +120,10 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
                         onChange={(e) => onChange(e)}
                     />
                         <Button
+                            sx={{ mt: 3, mb: 2,bgcolor: getLight().primary, color: getLight().onPrimary }}
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{mt: 3, mb: 2}}
                         >
                             Sign Up
                         </Button>
@@ -143,11 +155,13 @@ const SignUp = ({setAlert, register, isAuthenticated}) => {
 SignUp.propTypes = {
     setAlert: PropTypes.func.isRequired,
     register: PropTypes.func.isRequired,
-    isAuthenticated: PropTypes.bool
+    isAuthenticated: PropTypes.bool,
+    darkTheme: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
     isAuthenticated: state.auth.isAuthenticated,
+    darkTheme: state.theme.darkTheme,
 });
 
 export default connect(mapStateToProps, {setAlert, register})(SignUp)

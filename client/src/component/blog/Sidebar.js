@@ -8,6 +8,9 @@ import material from "../../material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import XIcon from "@mui/icons-material/X";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import {useEffect} from "react";
+import PropTypes from "prop-types";
+import {connect} from "react-redux";
 
 interface SidebarProps {
     archives: ReadonlyArray<{
@@ -20,10 +23,11 @@ interface SidebarProps {
         name: string;
     }>;
     title: string;
+    darkTheme: boolean;
 }
 
-export default function Sidebar(props: SidebarProps) {
-    // const { archives, description, social, title } = props;
+const Sidebar = (props: SidebarProps) => {
+    const {  darkTheme } = props;
     const archives =  [
         {title: 'March 2020', url: '#'},
         {title: 'February 2020', url: '#'},
@@ -44,13 +48,21 @@ export default function Sidebar(props: SidebarProps) {
         {name: 'X', icon: XIcon},
         {name: 'Facebook', icon: FacebookIcon},
     ]
+
+    useEffect(() => {
+
+    }, [darkTheme]);
+    function getLight() {
+        return darkTheme ? material().dark:material().light;
+    }
+
     return (
         <Grid item xs={12} md={4}>
-            <Paper elevation={0} sx={{ p: 2, bgcolor: `${material().light.secondaryContainer}` }}>
-                <Typography variant="h6" gutterBottom color={material().light.onSecondaryContainer}>
+            <Paper elevation={0} sx={{ p: 2, bgcolor: `${getLight().secondaryContainer}` }}>
+                <Typography variant="h6" gutterBottom color={getLight().onSecondaryContainer}>
                     {title}
                 </Typography>
-                <Typography color = {material().light.onSecondaryContainer}>{description}</Typography>
+                <Typography color = {getLight().onSecondaryContainer}>{description}</Typography>
             </Paper>
             <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
                 Archives
@@ -80,3 +92,11 @@ export default function Sidebar(props: SidebarProps) {
         </Grid>
     );
 }
+Sidebar.propTypes = {
+    darkTheme: PropTypes.bool.isRequired,
+}
+
+const mapStateToProps = (state) =>({
+    darkTheme: state.theme.darkTheme,
+})
+export default connect(mapStateToProps,null)(Sidebar)
