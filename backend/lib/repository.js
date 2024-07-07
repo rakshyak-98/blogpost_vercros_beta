@@ -18,14 +18,6 @@ Repository.getBlogShareWithMe = async (userRefId) => {
 	return share;
 };
 
-Repository.getBlogSharedByMe = async (userRefId) => {
-	const share = await Share.find({ owner: userRefId }, { __v: 0, owner: 0 }).populate("blog");
-	if (!share) {
-		throw new Error("SHARE_NOT_FOUND");
-	}
-	return share;
-};
-
 Repository.createShare = async (data, ownerRef) => {
 	const schema = zod.object({
 		blog: zod.string().min(24).max(24),
@@ -38,11 +30,11 @@ Repository.createShare = async (data, ownerRef) => {
 	}
 	const shareAlreadyExist = await Share.findOne({
 		blog: data.blog,
-		owner: ownerRef,
-	}, {__v: 0, owner: 0});
+		shareWith: data.shareWith,
+	});
 
 	if (shareAlreadyExist) {
-		return shareAlreadyExist;
+		throw new Error("SHARE_ALREADY_EXIST");
 	}
 
 	const newShare = await Share.create({ ...data, owner: ownerRef });
