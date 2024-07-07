@@ -11,7 +11,7 @@ BlogController.editBlog = async (req, res) => {
 	}
 };
 
-BlogController.getPostById = async (req, res) => {
+BlogController.getBlogById = async (req, res) => {
 	try {
 		const post = await Repository.getBlogById(req.params.id);
 		res.status(200).send(post);
@@ -21,9 +21,9 @@ BlogController.getPostById = async (req, res) => {
 	}
 };
 
-BlogController.getAllPost = async (req, res) => {
+BlogController.getAllBlog = async (req, res) => {
 	try {
-		const posts = await Repository.getAllBlog();
+		const posts = await Repository.getAllBlog(req.userData.id);
 		res.status(200).send(posts);
 	} catch (error) {
 		console.log(error.message);
@@ -31,7 +31,7 @@ BlogController.getAllPost = async (req, res) => {
 	}
 };
 
-BlogController.createPost = async (req, res) => {
+BlogController.createBlog = async (req, res) => {
 	try {
 		const post = await Repository.createBlog(req.body, req.userData.id);
 		res.status(201).send({
@@ -45,7 +45,7 @@ BlogController.createPost = async (req, res) => {
 	}
 };
 
-BlogController.deletePost = async (req, res) => {
+BlogController.deleteBlog = async (req, res) => {
 	try {
 		const post = await Repository.deleteBlog(req.params.id);
 		res.status(200).send(post);
