@@ -9,12 +9,18 @@ const ProfileSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	userRef: {
+	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
 		required: true,
         unique: true,
 	},
+	blogRef: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Blogs",
+		},
+	]
 });
 
 module.exports = mongoose.model("Profile", ProfileSchema);

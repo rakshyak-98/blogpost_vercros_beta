@@ -13,7 +13,7 @@ const BlogSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	userRef: {
+	createdBy: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
 		required: true,
