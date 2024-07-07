@@ -16,4 +16,8 @@ export const REMOVE_ALERT = 'REMOVE_ALERT';
 
 export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
+export const POST_SUCCESS = 'POST_SUCCESS';
+export const POST_FAILED = 'POST_FAILED';
+export const POST_LOADED = 'POST_LOADED';
+
 export const SET_THEME = 'SET_THEME';

@@ -9,4 +9,3 @@ Router.get("/auth", UserController.checkUserToken);
 Router.use("/blog", BlogRoutes);
 
 module.exports = Router;
-

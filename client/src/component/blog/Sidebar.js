@@ -50,7 +50,6 @@ const Sidebar = (props: SidebarProps) => {
     ]
 
     useEffect(() => {
-
     }, [darkTheme]);
     function getLight() {
         return darkTheme ? material().dark:material().light;

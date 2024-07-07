@@ -1,89 +1,37 @@
 import React from 'react';
-import {Editor, EditorState, RichUtils} from 'draft-js';
+import PropTypes from 'prop-types';
+import {connect} from "react-redux";
+import {postBlog} from "../../actions/post";
+import MDEditor from "@uiw/react-md-editor";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import material from "../../material";
-import CssBaseline from "@mui/material/CssBaseline";
+import Material from "../../material";
 import Button from "@mui/material/Button";
 
-class Post extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            editorState: EditorState.createEmpty()
-        };
+const Post = ({postBlog}) => {
+    const defaultTheme = createTheme(Material())
+    const [description, setDescription] = React.useState("");
 
-        this.onChange = this.onChange.bind(this);
-        this.toggleInlineStyle = this.toggleInlineStyle.bind(this);
-    }
+    return (
+        <ThemeProvider theme={defaultTheme}>
+            <div>
+                <MDEditor value={description} onChange={setDescription}/>
+            </div>
+            <Button
+                onClick={() => postBlog(description)}
+            >
+                Submit
+            </Button>
+        </ThemeProvider>
 
-    onChange(editorState) {
-        this.setState({editorState});
-    }
+    );
+};
 
-    toggleInlineStyle(event) {
-        event.preventDefault();
-        let style = event.currentTarget.getAttribute('data-style');
-        this.setState({
-            editorState: RichUtils.toggleInlineStyle(this.state.editorState, style)
-        });
-    }
+Post.propTypes = {
+    postBlog: PropTypes.func.isRequired
+};
 
-    render() {
-        const defaultTheme = createTheme(material());
-        return (
-            <ThemeProvider theme={defaultTheme}>
-                <CssBaseline/>
-                <div className="my-little-app">
-                    <h1>Write your blog here</h1>
-                    <Button type="button"
-                            value="Bold"
-                            data-style="BOLD"
-                            variant="outlined"
-                            onMouseDown={this.toggleInlineStyle}
-                    >
-                        Bold
-                    </Button>
+const mapDispatchToProps = (state) => ({
+    potBlog: state.post.postBlog
+})
 
-                    <Button
-                        variant="outlined"
-                        type="button"
-                        value="Italic"
-                        data-style="ITALIC"
-                        onMouseDown={this.toggleInlineStyle}
-                    >
-                        Italic
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        type="button"
-                        value="Code"
-                        data-style="CODE"
-                        onMouseDown={this.toggleInlineStyle}
-                    >
-                        Code
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        type="button"
-                        value="Underline"
-                        data-style="UNDERLINE"
-                        onMouseDown={this.toggleInlineStyle}
-                    >
-                        Underline
-                    </Button>
-                    <div className="draft-editor-wrapper">
-                        <Editor
-                            editorState={this.state.editorState}
-                            onChange={this.onChange}/>
-                    </div>
-                    <Button
-                        variant="contained">
-                        Submit
-                    </Button>
-                </div>
-            </ThemeProvider>
-        );
-    }
-}
-
-export default Post;
+export default connect(mapDispatchToProps,{postBlog})(Post);

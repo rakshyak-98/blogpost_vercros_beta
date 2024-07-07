@@ -19,7 +19,7 @@ import Container from "@mui/material/Container";
 import {getTheme} from "./themeSwitcher";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {logout} from "../../actions/auth";
+import {loadUser, logout} from "../../actions/auth";
 import {Link as ReduxLink} from 'react-router-dom'
 import {useEffect} from "react";
 import {setTheme} from "../../actions/theme";
@@ -34,6 +34,7 @@ interface HeaderProps {
     isAuthenticated: boolean;
     darkTheme: boolean;
     setTheme: void;
+    loadUser: void;
 }
 
 const Header = (props: HeaderProps) => {
@@ -51,15 +52,18 @@ const Header = (props: HeaderProps) => {
         {title: 'Style', url: '#'},
         {title: 'Travel', url: '#'},
     ];
-    const {title, isAuthenticated, darkTheme, setTheme} = props;
+    const {title, isAuthenticated, darkTheme, setTheme, logout} = props;
+    useEffect(() => {
+    }, [darkTheme]);
+
+    useEffect(() => {
+        loadUser();
+    }, [isAuthenticated]);
     //local setitings end --
     const [open, setOpen] = React.useState(false);
 
-    const themeDark = () => {
-        setTheme(false);
-    }
-    const themeLight = () => {
-        setTheme(true);
+    const switchTheme = () => {
+        setTheme();
     }
     const handleClose = () => {
         setOpen(false);
@@ -70,17 +74,10 @@ const Header = (props: HeaderProps) => {
 
     const defaultTheme = createTheme();
 
-    const handleLogout = async (event) => {
+    const handleLogout = () => {
         logout();
-        event.preventDefault();
     }
 
-    useEffect(() => {
-    }, [darkTheme]);
-
-    useEffect(() => {
-
-    }, [isAuthenticated]);
 
     return (
         <React.Fragment>
@@ -148,19 +145,18 @@ const Header = (props: HeaderProps) => {
                                 </IconButton>
                             </div>
                         ) : (
-                            <Button component={ReduxLink} to="/signup" variant="contained" size="small">
+                            <Button sx={{bgcolor: `${getTheme(darkTheme).primary}`, color: `${getTheme(darkTheme).onPrimary}` }} component={ReduxLink} to="/signup" variant="contained" size="small">
                                 Sign up
                             </Button>
-
 
                         )}
                         <Helmet>
                             <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
                         </Helmet>
-                        {darkTheme ? (<IconButton onClick={themeDark} size="small"><WbSunnyOutlined
+                        {darkTheme ? (<IconButton onClick={switchTheme} size="small"><WbSunnyOutlined
                                 sx={{color: `${material().dark.primary}`}}/></IconButton>)
                             :
-                            (<IconButton size="small" onClick={themeLight}><WbSunnyRounded
+                            (<IconButton size="small" onClick={switchTheme}><WbSunnyRounded
                                 sx={{color: `${getTheme(darkTheme).primary}`}}
                             /></IconButton>)}
 
@@ -200,6 +196,7 @@ Header.propTypes = {
     isAuthenticated: PropTypes.bool.isRequired,
     setTheme: PropTypes.func.isRequired,
     darkTheme: PropTypes.bool.isRequired,
+    loadUser: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
@@ -208,5 +205,5 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, {logout, setTheme})(Header)
+export default connect(mapStateToProps, {logout, setTheme, loadUser})(Header)
 // export default  Header;

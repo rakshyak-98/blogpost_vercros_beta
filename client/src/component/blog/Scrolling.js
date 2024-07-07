@@ -15,7 +15,6 @@ const Scrolling = ({darkTheme}) => {
 
 
     useEffect(() => {
-
     }, [darkTheme]);
 
     function getLight() {
