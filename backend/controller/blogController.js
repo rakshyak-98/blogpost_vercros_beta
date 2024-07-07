@@ -26,7 +26,7 @@ BlogController.getAllBlog = async (req, res) => {
 		const posts = await Repository.getAllBlog(req.userData.id);
 		res.status(200).send(posts);
 	} catch (error) {
-		console.log(error.message);
+		res.status(400).send(error.message);
 		return;
 	}
 };

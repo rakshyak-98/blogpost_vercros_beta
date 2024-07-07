@@ -1,4 +1,4 @@
-require("dotenv").config(); // keep this at top, auth wise this can create inconsistency in environment variables;
+require("dotenv").config(); // keep this at top, other wise this can create inconsistency in environment variables;
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
