@@ -4,8 +4,76 @@ const User = require("../models/UserModel");
 const Profile = require("../models/ProfileModel");
 const jwt = require("jsonwebtoken");
 const Blog = require("../models/BlogModel");
+const Share = require("../models/ShareModel");
 
 function Repository() {}
+
+Repository.getBlogShareWithMe = async (userRefId) => {
+	const share = await Share.find({ shareWith: userRefId }, { __v: 0, shareWith: 0 }).populate(
+		"blog"
+	);
+	if (!share) {
+		throw new Error("SHARE_NOT_FOUND");
+	}
+	return share;
+};
+
+Repository.getBlogSharedByMe = async (userRefId) => {
+	const share = await Share.find({ owner: userRefId }, { __v: 0, owner: 0 }).populate("blog");
+	if (!share) {
+		throw new Error("SHARE_NOT_FOUND");
+	}
+	return share;
+};
+
+Repository.createShare = async (data, ownerRef) => {
+	const schema = zod.object({
+		blog: zod.string().min(24).max(24),
+		accessPermission: zod.enum(["view", "edit"]),
+		shareWith: zod.array(zod.string().min(24).max(24)),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const shareAlreadyExist = await Share.findOne({
+		blog: data.blog,
+		owner: ownerRef,
+	}, {__v: 0, owner: 0});
+
+	if (shareAlreadyExist) {
+		return shareAlreadyExist;
+	}
+
+	const newShare = await Share.create({ ...data, owner: ownerRef });
+	return {
+		id: newShare._id,
+		owner: newShare.owner,
+		blog: newShare.blog,
+		accessPermission: newShare.accessPermission,
+		shareWith: newShare.shareWith,
+	};
+};
+
+Repository.editShareByUserId = async (data) => {
+	const schema = zod.object({
+		blog: zod.string().min(24).max(24),
+		userRef: zod.string().min(24).max(24).optional(),
+	});
+	const validation = schema.safeParse(data);
+	if (!validation.success) {
+		throw new Error(validation.error);
+	}
+	const share = await Share.findOneAndUpdate(
+		{ blog: data.blog, accessPermission: "edit" },
+		data,
+		{ new: true }
+	);
+	if (share === null) {
+		throw new Error("BLOG_NOT_SHARED");
+	}
+	return share;
+};
 
 Repository.editBlog = async (data, id) => {
 	const schema = zod.object({
@@ -31,27 +99,27 @@ Repository.createBlog = async (data, userRef) => {
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const newPost = await Blog.create({ ...data, userRef: userRef });
+	const newPost = await Blog.create({ ...data, createdBy: userRef });
 	return newPost;
 };
 
 Repository.getBlogById = async (id) => {
-	return await Blog.findById(id, { __v: 0, userRef: 0 });
+	return await Blog.findById(id, { __v: 0, createdBy: 0 });
 };
 
-Repository.getAllBlog = async () => {
+Repository.getAllBlog = async (userRef) => {
 	// TODO: paginate this
-	const posts = await Blog.find({}, { __v: 0, userRef: 0 });
+	const posts = await Blog.find({ createdBy: userRef }, { __v: 0, createdBy: 0 });
 	return posts;
 };
 
-Repository.deleteBlog = async (id) => {
-	const post = await Blog.findById(id, { _id: 1 });
-	if (!post) {
-		throw new Error("POST_NOT_FOUND");
+Repository.deleteBlog = async (blogId) => {
+	const blog = await Blog.findById(blogId, { _id: 1 });
+	if (!blog) {
+		throw new Error("BLOG_NOT_FOUND");
 	}
-	await post.deleteOne();
-	return post;
+	await blog.deleteOne();
+	return blog;
 };
 
 Repository.createProfile = async (data, userRef) => {
@@ -63,7 +131,7 @@ Repository.createProfile = async (data, userRef) => {
 	if (!validation.success) {
 		throw new Error(validation.error);
 	}
-	const newProfile = await Profile.create({ ...data, userRef: userRef });
+	const newProfile = await Profile.create({ ...data, createdBy: userRef });
 	return newProfile;
 };
 
