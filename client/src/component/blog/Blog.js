@@ -10,43 +10,12 @@ import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import map from "lodash/map"
-import range from "lodash/range";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
 import MaterialTheme from '../../material-theme.json'
-import material from "../../material";
 import Scrolling from "./Scrolling";
-
-const mainFeaturedPost = {
-    title: 'Title of a longer featured blog post',
-    description:
-        "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
-    image: 'https://picsum.photos/800/300',
-    imageText: 'main image description',
-    linkText: 'Continue reading…',
-};
-
-const featuredPosts = [
-    {
-        title: 'Featured post',
-        date: 'Nov 12',
-        description:
-            'This is a wider card with supporting text below as a natural lead-in to additional content.',
-        image: 'https://picsum.photos/200/220',
-        imageLabel: 'Image Text',
-    },
-    {
-        title: 'Post title',
-        date: 'Nov 11',
-        description:
-            'This is a wider card with supporting text below as a natural lead-in to additional content.',
-        image: 'https://picsum.photos/200/200',
-        imageLabel: 'Image Text',
-    },
-];
+import {connect} from "react-redux";
+import {getBlog} from "../../actions/post";
+import {useEffect} from "react";
+import PropTypes from "prop-types";
 
 const sidebar = {
     title: 'About',
@@ -72,22 +41,29 @@ const sidebar = {
     ],
 };
 
-const defaultTheme = createTheme(MaterialTheme);
+interface BlogProps {
+    posts: any ;
+    darkTheme: boolean;
+    getBlog: void;
+};
 
-export default function Blog() {
+const Blog = (props: BlogProps) => {
+    const defaultTheme = createTheme(MaterialTheme);
+    const {posts} = props;
+
     return (
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline/>
-            <Container maxWidth="lg" >
+            <Container maxWidth="lg">
                 <main>
-                    <MainFeaturedPost post={mainFeaturedPost}/>
+                    <MainFeaturedPost post={posts.at(0)}/>
                     <Grid container spacing={4}>
-                        {featuredPosts.map((post) => (
+                        {(posts.slice(1,3)).map((post) => (
                             <FeaturedPost key={post.title} post={post}/>
                         ))}
                     </Grid>
                     <Grid container spacing={5} sx={{mt: 3}}>
-                        <Scrolling/>
+                        <Scrolling posts={posts.slice(3,6)}/>
                         <Sidebar
                             title={sidebar.title}
                             description={sidebar.description}
@@ -104,3 +80,15 @@ export default function Blog() {
         </ThemeProvider>
     );
 }
+Blog.propTypes = {
+    darkTheme: PropTypes.object.isRequired,
+    posts: PropTypes.array.isRequired,
+    getBlog: PropTypes.func.isRequired,
+}
+const mapStateToProps = (state) => ({
+    getBlog: state.post.getBlog,
+    darkTheme: state.theme.darkTheme,
+    posts: state.post.posts,
+})
+
+export default connect(mapStateToProps, {getBlog})(Blog);

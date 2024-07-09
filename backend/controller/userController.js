@@ -32,6 +32,29 @@ UserController.createUser = async function (req, res) {
 	}
 };
 
+
+
+UserController.checkToken = async function (req, res) {
+	if (!req.headers.hasOwnProperty("authorization")) {
+		res.status(401).send("AUTHORIZATION_HEADER_NOT_FOUND");
+		return;
+	}
+	const token = req.headers["authorization"].split("Bearer ")[1];
+	if (!token) {
+		res.status(401).send("TOKEN_NOT_FOUND");
+		return;
+	}
+	try {
+		const decode = Repository.verifyToken(token);
+		req.userData = decode;
+	} catch (error) {
+		res.status(401).send("TOKEN_NOT_VALID");
+		return;
+	}
+	return res.status(200).send(req.userData);
+
+};
+
 UserController.checkUserToken = async function (req, res, next) {
 	if (!req.headers.hasOwnProperty("authorization")) {
 		res.status(401).send("AUTHORIZATION_HEADER_NOT_FOUND");
@@ -49,7 +72,7 @@ UserController.checkUserToken = async function (req, res, next) {
 		res.status(401).send("TOKEN_NOT_VALID");
 		return;
 	}
-	next();
+	next()
 };
 
 module.exports = UserController;

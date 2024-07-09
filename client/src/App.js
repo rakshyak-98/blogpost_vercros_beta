@@ -14,6 +14,8 @@ import Post3 from "./component/blog/posts/Post3";
 import Header from "./component/header/Header";
 import {loadUser} from "./actions/auth";
 import setAuthToken from "./utils/setAuthToken";
+import Main from "./component/blog/Main";
+import {getBlog} from "./actions/post";
 
 if (localStorage.token) {
     setAuthToken(localStorage.token);
@@ -22,6 +24,7 @@ if (localStorage.token) {
 const App = () => {
     useEffect(() => {
         store.dispatch(loadUser());
+        store.dispatch(getBlog());
     }, []);
     return (
         <Provider store={store}>

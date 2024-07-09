@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {useEffect} from "react";
 import {setTheme} from "../../actions/theme";
+import Markdown from "./Markdown";
 
 export const FeaturedPost = ({
                                  post: {date, description, image, imageLabel, title},
@@ -35,7 +36,9 @@ export const FeaturedPost = ({
                             {date}
                         </Typography>
                         <Typography variant="subtitle1" paragraph color={getLight().onPrimary}>
-                            {description}
+                            <Markdown>
+                                {description.substring(0, 80)+". . . ."}
+                            </Markdown>
                         </Typography>
                         <Typography variant="subtitle1" color="primary">
                             Continue reading...

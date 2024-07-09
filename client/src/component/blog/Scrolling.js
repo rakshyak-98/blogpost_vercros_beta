@@ -10,8 +10,9 @@ import material from "../../material";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {setTheme} from "../../actions/theme";
+import Markdown from "./Markdown";
 
-const Scrolling = ({darkTheme}) => {
+const Scrolling = ({darkTheme, posts}) => {
 
 
     useEffect(() => {
@@ -29,18 +30,21 @@ const Scrolling = ({darkTheme}) => {
                   },
               }}
         >
-            {map(range(4), (index) => (
-                <CardActionArea key={index} component="a" href="/blog/post3">
+            {posts.map((post) => (
+                <CardActionArea key={post._id} component="a" href="/blog/post3">
                     <Card sx={{display: "flex", marginBottom: "12px"}}>
                         <CardContent sx={{flex: 1, display: "flex", background: `${getLight().tertiary}`}}>
                             <div><Typography component="h2" variant="h5" color={getLight().onTertiary}>
-                                This is a blog
+                                {post.title}
                             </Typography>
                                 <Typography variant="subtitle1" color={getLight().onTertiary}>
-                                    How it started
+                                    {post.category}
                                 </Typography>
                                 <Typography variant="subtitle1" paragraph color={getLight().onTertiary}>
-                                    It all started with a spark, that ignited and made many possibilities visible
+                                    <Markdown>
+
+                                    {post.description.toString().slice(0, 100)+" . . . ."}
+                                    </Markdown>
                                 </Typography>
                                 <Typography variant="subtitle1" color="primary">
                                     Continue reading...
@@ -49,7 +53,6 @@ const Scrolling = ({darkTheme}) => {
                     </Card>
                 </CardActionArea>
             ))}
-
         </Grid>
     )
         ;

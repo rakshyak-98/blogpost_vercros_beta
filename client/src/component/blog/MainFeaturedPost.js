@@ -2,20 +2,22 @@ import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Link from '@mui/material/Link';
+import {Link as RouterLink} from 'react-router-dom';
 import Box from '@mui/material/Box';
 import material from "../../material";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {setTheme} from "../../actions/theme";
 import {useEffect} from "react";
+import {getBlogById} from "../../actions/post";
+import Button from "@mui/material/Button";
 
 interface MainFeaturedPostProps {
     post: {
         description: string;
         image: string;
-        imageText: string;
-        linkText: string;
+        imageText: "image";
+        linkText: "click to read more . . . . ";
         title: string;
     };
     darkTheme:boolean;
@@ -69,11 +71,11 @@ const MainFeaturedPost = (props: MainFeaturedPostProps) => {
                             {post.title}
                         </Typography>
                         <Typography variant="h5" color={getLight().onSecondary} paragraph>
-                            {post.description}
+                            {post.description.toString().substring(3, 50)}...
                         </Typography>
-                        <Link variant="subtitle1" href="/blog/post1">
-                            {post.linkText}
-                        </Link>
+                        <RouterLink variant="subtitle1" to="/blog/post1" >
+                            Continue reading . . . .
+                        </RouterLink>
                     </Box>
                 </Grid>
             </Grid>
@@ -81,13 +83,15 @@ const MainFeaturedPost = (props: MainFeaturedPostProps) => {
     );
 }
 
-MainFeaturedPost.prototype = {
+MainFeaturedPost.propType = {
     darkTheme: PropTypes.bool.isRequired,
     setTheme: PropTypes.func.isRequired,
+    getBlogById: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
     darkTheme: state.theme.darkTheme,
+    getBlogById: state.post.getBlogById
 })
 
-export default connect(mapStateToProps, setTheme)(MainFeaturedPost)
+export default connect(mapStateToProps, getBlogById)(MainFeaturedPost)

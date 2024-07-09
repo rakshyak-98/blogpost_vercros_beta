@@ -14,6 +14,7 @@ function verifyUserToken(req, res, next) {
 
 Router.post("/signUp", UserController.createUser);
 Router.post("/signIn", UserController.signIn);
+// Router.get("/auth", UserController.checkToken);
 Router.post("/profile", UserController.checkUserToken, UserController.createProfile);
 Router.use("/blog", UserController.checkUserToken, verifyUserToken, BlogRoutes);
 Router.use("/share", UserController.checkUserToken, verifyUserToken, ShareRoutes);

@@ -32,13 +32,13 @@ export const loadUser = () => async (dispatch) => {
     }
 }
 
-export const register = (email, password) => async (dispatch) => {
+export const register = (username, password) => async (dispatch) => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
         },
     };
-    const body = JSON.stringify({ email, password });
+    const body = JSON.stringify({username,password});
     try {
         const res = await axios.post('/api/signUp', body, config);
 
@@ -56,13 +56,13 @@ export const register = (email, password) => async (dispatch) => {
     }
 }
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (username, password) => async (dispatch) => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
         },
     }
-    const body = JSON.stringify({ email, password });
+    const body = JSON.stringify({ username, password });
     try {
         const res = await axios.post('/api/signin', body, config);
         dispatch({ type: LOGIN_SUCCESS, payload: res.data });
