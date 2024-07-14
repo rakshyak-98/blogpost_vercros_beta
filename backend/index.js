@@ -13,7 +13,7 @@ mongoose.connect(CONFIG.DB_URL);
 index.use(bodyParser.json({ limit: "10mb" }));
 index.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 index.use(helmet());
-index.use(cors({ origin: CONFIG.ORIGIN }));
+index.use(cors({ origin: CONFIG.ORIGIN,credentials:true }));
 index.use("/api", routes);
 
 index.listen(CONFIG.PORT, () => {

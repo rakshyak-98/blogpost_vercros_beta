@@ -9,7 +9,7 @@ export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAIL = 'LOGOUT_FAIL';
 
 export const USER_LOADED = 'USER_LOADED';
-export const AUTH_ERR0R = 'AUTH_ERR0R';
+export const AUTH_ERROR = 'AUTH_ERROR';
 
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
@@ -22,3 +22,5 @@ export const POST_LOADED = 'POST_LOADED';
 export const POSTS_LOADED = 'POSTS_LOADED'
 
 export const SET_THEME = 'SET_THEME';
+
+export const BACKEND_URL= process.env.REACT_APP_BACKEND_URL;

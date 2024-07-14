@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import {Backdrop, InputBase} from "@mui/material";
+import {Backdrop, Drawer, InputBase, ListItem, useMediaQuery} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
@@ -14,15 +14,17 @@ import AccountCircleRounded from "@mui/icons-material/AccountCircleRounded";
 import {Helmet} from "react-helmet";
 import material from "../../material";
 import CssBaseline from "@mui/material/CssBaseline";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {createTheme, ThemeProvider, useTheme} from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import {getTheme} from "./themeSwitcher";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {loadUser, logout} from "../../actions/auth";
 import {Link as ReduxLink} from 'react-router-dom'
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {setTheme} from "../../actions/theme";
+import List from "@mui/material/List";
+import ListItemText from "@mui/material/ListItemText";
 
 
 interface HeaderProps {
@@ -72,7 +74,16 @@ const Header = (props: HeaderProps) => {
         setOpen(true);
     }
 
-    const defaultTheme = createTheme();
+    const defaultTheme = useTheme();
+    const isMobile = useMediaQuery(defaultTheme.breakpoints.down('sm'));
+    const [drawerOpen, setDrawerOpen] = useState(false);
+
+    const toggleDrawer = (open) => (event) => {
+        if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+            return;
+        }
+        setDrawerOpen(open);
+    }
 
     const handleLogout = () => {
         logout();
@@ -84,7 +95,57 @@ const Header = (props: HeaderProps) => {
             <ThemeProvider theme={defaultTheme}>
                 <CssBaseline/>
                 <Container maxWidth="lg">
-                    <Toolbar sx={{
+                    {isMobile ? (<Toolbar>
+                        <IconButton
+                            edge="start"
+                            color="default"
+                            onClick={toggleDrawer(true)}
+                        >
+                            <MenuIcon/>
+                        </IconButton>
+                        <Typography variant="h6" style={{flexGrow:1}}>
+                            Daily Blog
+                        </Typography>
+                        {isAuthenticated ? (
+                            <div>
+                                <IconButton component={ReduxLink} to="/dashboard" size="small">
+                                    <AccountCircleRounded sx={{color: `${getTheme(darkTheme).primary}`}}/>
+                                </IconButton>
+                                <IconButton onClick={handleLogout} size="small">
+                                    <Logout sx={{color: `${getTheme(darkTheme).primary}`}}/>
+                                </IconButton>
+                            </div>
+                        ) : (
+                            <Button sx={{
+                                bgcolor: `${getTheme(darkTheme).primary}`,
+                                color: `${getTheme(darkTheme).onPrimary}`
+                            }} component={ReduxLink} to="/signup" variant="contained" size="small">
+                                Sign up
+                            </Button>
+
+                        )}
+                        <Helmet>
+                            <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
+                        </Helmet>
+                        {darkTheme ? (<IconButton onClick={switchTheme} size="small"><WbSunnyOutlined
+                                sx={{color: `${material().dark.primary}`}}/></IconButton>)
+                            :
+                            (<IconButton size="small" onClick={switchTheme}><WbSunnyRounded
+                                sx={{color: `${getTheme(darkTheme).primary}`}}
+                            /></IconButton>)}
+                        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+                            <List>
+                                <Typography variant="h6" style={{padding: 10}}>Categories</Typography>
+                                {sections.map((section,index) => (
+                                    <ListItem button key={section.title} onClick={toggleDrawer(false)}>
+                                        <ListItemText primary={section.title}/>
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Drawer>
+
+
+                    </Toolbar>):(<Toolbar sx={{
                         borderBottom: 1,
                         borderColor: 'divider',
                         background: `${getTheme(darkTheme).surfaceVariant}`
@@ -145,7 +206,10 @@ const Header = (props: HeaderProps) => {
                                 </IconButton>
                             </div>
                         ) : (
-                            <Button sx={{bgcolor: `${getTheme(darkTheme).primary}`, color: `${getTheme(darkTheme).onPrimary}` }} component={ReduxLink} to="/signup" variant="contained" size="small">
+                            <Button sx={{
+                                bgcolor: `${getTheme(darkTheme).primary}`,
+                                color: `${getTheme(darkTheme).onPrimary}`
+                            }} component={ReduxLink} to="/signup" variant="contained" size="small">
                                 Sign up
                             </Button>
 
@@ -160,9 +224,9 @@ const Header = (props: HeaderProps) => {
                                 sx={{color: `${getTheme(darkTheme).primary}`}}
                             /></IconButton>)}
 
-                    </Toolbar>
+                    </Toolbar>)}
 
-                    <Toolbar
+                    {!isMobile && <Toolbar
                         component="nav"
                         variant="dense"
                         sx={{justifyContent: 'space-between', overflowX: 'auto'}}
@@ -184,7 +248,7 @@ const Header = (props: HeaderProps) => {
                                 </Typography>
                             </Link>
                         ))}
-                    </Toolbar>
+                    </Toolbar>}
                 </Container>
             </ThemeProvider>
         </React.Fragment>

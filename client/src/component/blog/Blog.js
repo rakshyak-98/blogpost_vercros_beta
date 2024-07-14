@@ -4,8 +4,9 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import FacebookIcon from '@mui/icons-material/Facebook';
+import {CircularProgress} from "@mui/material";
 import XIcon from '@mui/icons-material/X';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {createTheme, ThemeProvider, useTheme} from '@mui/material/styles';
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
 import Sidebar from './Sidebar';
@@ -16,6 +17,7 @@ import {connect} from "react-redux";
 import {getBlog} from "../../actions/post";
 import {useEffect} from "react";
 import PropTypes from "prop-types";
+import {useMediaQuery} from "@mui/material";
 
 const sidebar = {
     title: 'About',
@@ -44,32 +46,42 @@ const sidebar = {
 interface BlogProps {
     posts: any ;
     darkTheme: boolean;
+    loading: boolean;
     getBlog: void;
 };
 
 const Blog = (props: BlogProps) => {
     const defaultTheme = createTheme(MaterialTheme);
-    const {posts} = props;
+    const {posts,loading} = props;
+    const isMobile = useMediaQuery(defaultTheme.breakpoints.down('sm'));
 
-    return (
+    return (loading ? <CircularProgress
+            sx={{
+                position: 'absolute',
+                top: '20%',
+                left: '50%',
+                marginTop: '-12px',
+                marginLeft: '-12px',
+            }}
+            />:
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline/>
             <Container maxWidth="lg">
                 <main>
                     <MainFeaturedPost post={posts.at(0)}/>
-                    <Grid container spacing={4}>
+                    <Grid container spacing={isMobile ? 2 : 4}>
                         {(posts.slice(1,3)).map((post) => (
                             <FeaturedPost key={post.title} post={post}/>
                         ))}
                     </Grid>
                     <Grid container spacing={5} sx={{mt: 3}}>
                         <Scrolling posts={posts.slice(3,6)}/>
-                        <Sidebar
+                        {!isMobile && <Sidebar
                             title={sidebar.title}
                             description={sidebar.description}
                             archives={sidebar.archives}
                             social={sidebar.social}
-                        />
+                        />}
                     </Grid>
                 </main>
             </Container>
@@ -84,11 +96,13 @@ Blog.propTypes = {
     darkTheme: PropTypes.object.isRequired,
     posts: PropTypes.array.isRequired,
     getBlog: PropTypes.func.isRequired,
+    loading: PropTypes.bool.isRequired
 }
 const mapStateToProps = (state) => ({
     getBlog: state.post.getBlog,
     darkTheme: state.theme.darkTheme,
     posts: state.post.posts,
+    loading: state.post.loading
 })
 
 export default connect(mapStateToProps, {getBlog})(Blog);

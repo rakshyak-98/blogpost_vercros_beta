@@ -7,10 +7,11 @@ import Box from '@mui/material/Box';
 import material from "../../material";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {setTheme} from "../../actions/theme";
 import {useEffect} from "react";
 import {getBlogById} from "../../actions/post";
-import Button from "@mui/material/Button";
+import {useMediaQuery} from "@mui/material";
+import Material from "../../material";
+import {createTheme} from "@mui/material/styles";
 
 interface MainFeaturedPostProps {
     post: {
@@ -26,6 +27,8 @@ interface MainFeaturedPostProps {
 
 const MainFeaturedPost = (props: MainFeaturedPostProps) => {
     const { post , darkTheme} = props;
+    const defaultTheme = createTheme(Material);
+    const isMobile = useMediaQuery(defaultTheme.breakpoints.down('sm'));
 
     useEffect(() => {
 
