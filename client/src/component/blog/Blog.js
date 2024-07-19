@@ -1,12 +1,12 @@
 import * as React from 'react';
+import './GradientLoadingScreen.css';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import FacebookIcon from '@mui/icons-material/Facebook';
-import {CircularProgress} from "@mui/material";
 import XIcon from '@mui/icons-material/X';
-import {createTheme, ThemeProvider, useTheme} from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import MainFeaturedPost from './MainFeaturedPost';
 import FeaturedPost from './FeaturedPost';
 import Sidebar from './Sidebar';
@@ -15,9 +15,8 @@ import MaterialTheme from '../../material-theme.json'
 import Scrolling from "./Scrolling";
 import {connect} from "react-redux";
 import {getBlog} from "../../actions/post";
-import {useEffect} from "react";
 import PropTypes from "prop-types";
-import {useMediaQuery} from "@mui/material";
+import {makeStyles, useMediaQuery} from "@mui/material";
 
 const sidebar = {
     title: 'About',
@@ -54,16 +53,20 @@ const Blog = (props: BlogProps) => {
     const defaultTheme = createTheme(MaterialTheme);
     const {posts,loading} = props;
     const isMobile = useMediaQuery(defaultTheme.breakpoints.down('sm'));
-
-    return (loading ? <CircularProgress
-            sx={{
-                position: 'absolute',
-                top: '20%',
-                left: '50%',
-                marginTop: '-12px',
-                marginLeft: '-12px',
-            }}
-            />:
+    const GradientLoadingScreen = () => {
+        return (
+            <div className="gradientLoader">
+            </div>
+        );
+    };
+    return (loading ?
+        <ThemeProvider theme={defaultTheme}>
+            <CssBaseline/>
+            <Container maxWidth="lg">
+            <GradientLoadingScreen/>:
+            </Container>
+        </ThemeProvider>
+            :
         <ThemeProvider theme={defaultTheme}>
             <CssBaseline/>
             <Container maxWidth="lg">
@@ -75,7 +78,7 @@ const Blog = (props: BlogProps) => {
                         ))}
                     </Grid>
                     <Grid container spacing={5} sx={{mt: 3}}>
-                        <Scrolling posts={posts.slice(3,6)}/>
+                        <Scrolling posts={posts.slice(3,8)}/>
                         {!isMobile && <Sidebar
                             title={sidebar.title}
                             description={sidebar.description}
@@ -87,8 +90,9 @@ const Blog = (props: BlogProps) => {
             </Container>
             <Footer
                 title="Footer"
-                description="Something here to give the footer a purpose!"
+                description="Join our Newsletter"
             />
+
         </ThemeProvider>
     );
 }

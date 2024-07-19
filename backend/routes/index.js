@@ -16,6 +16,7 @@ Router.post("/signUp", UserController.createUser);
 Router.post("/signIn", UserController.signIn);
 Router.get("/auth", UserController.checkToken);
 Router.post("/profile", UserController.checkUserToken, UserController.createProfile);
+Router.get("/profile/:id", UserController.checkUserToken, UserController.getProfile);
 Router.use("/blog", BlogRoutes);
 Router.use("/share", UserController.checkUserToken, verifyUserToken, ShareRoutes);
 

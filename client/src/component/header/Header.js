@@ -37,24 +37,28 @@ interface HeaderProps {
     darkTheme: boolean;
     setTheme: void;
     loadUser: void;
+    posts: null;
 }
 
 const Header = (props: HeaderProps) => {
-    // const {sections, title} = props;
+    // const {categories, title} = props;
     // local settings start--
-    const sections = [
-        {title: 'Technology', url: '#'},
-        {title: 'Design', url: '#'},
-        {title: 'Culture', url: '#'},
-        {title: 'Business', url: '#'},
-        {title: 'Politics', url: '#'},
-        {title: 'Opinion', url: '#'},
-        {title: 'Science', url: '#'},
-        {title: 'Health', url: '#'},
-        {title: 'Style', url: '#'},
-        {title: 'Travel', url: '#'},
-    ];
-    const {title, isAuthenticated, darkTheme, setTheme, logout} = props;
+    const {title, isAuthenticated, darkTheme, setTheme, logout,} = props;
+
+    const posts = [
+        {category: 'Technology', url: '#'},
+        {category: 'Design', url: '#'},
+        {category: 'Culture', url: '#'},
+        {category: 'Business', url: '#'},
+        {category: 'Politics', url: '#'},
+        {category: 'Opinion', url: '#'},
+        {category: 'Science', url: '#'},
+        {category: 'Health', url: '#'},
+        {category: 'Style', url: '#'},
+        {category: 'Travel', url: '#'},
+        {category: 'Mera Category', url: '#'},
+    ]
+
     useEffect(() => {
     }, [darkTheme]);
 
@@ -85,6 +89,14 @@ const Header = (props: HeaderProps) => {
         setDrawerOpen(open);
     }
 
+    const getCategories = (posts) => {
+        const categories = []
+        posts.map((post) => {
+            categories.push(post.category);
+        });
+        return new Set(categories);
+    }
+
     const handleLogout = () => {
         logout();
     }
@@ -95,156 +107,159 @@ const Header = (props: HeaderProps) => {
             <ThemeProvider theme={defaultTheme}>
                 <CssBaseline/>
                 <Container maxWidth="lg">
-                    {isMobile ? (<Toolbar>
-                        <IconButton
-                            edge="start"
-                            color="default"
-                            onClick={toggleDrawer(true)}
-                        >
-                            <MenuIcon/>
-                        </IconButton>
-                        <Typography variant="h6" style={{flexGrow:1}}>
-                            Daily Blog
-                        </Typography>
-                        {isAuthenticated ? (
-                            <div>
-                                <IconButton component={ReduxLink} to="/dashboard" size="small">
-                                    <AccountCircleRounded sx={{color: `${getTheme(darkTheme).primary}`}}/>
-                                </IconButton>
-                                <IconButton onClick={handleLogout} size="small">
-                                    <Logout sx={{color: `${getTheme(darkTheme).primary}`}}/>
-                                </IconButton>
-                            </div>
-                        ) : (
-                            <Button sx={{
-                                bgcolor: `${getTheme(darkTheme).primary}`,
-                                color: `${getTheme(darkTheme).onPrimary}`
-                            }} component={ReduxLink} to="/signup" variant="contained" size="small">
-                                Sign up
-                            </Button>
-
-                        )}
-                        <Helmet>
-                            <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
-                        </Helmet>
-                        {darkTheme ? (<IconButton onClick={switchTheme} size="small"><WbSunnyOutlined
-                                sx={{color: `${material().dark.primary}`}}/></IconButton>)
-                            :
-                            (<IconButton size="small" onClick={switchTheme}><WbSunnyRounded
-                                sx={{color: `${getTheme(darkTheme).primary}`}}
-                            /></IconButton>)}
-                        <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
-                            <List>
-                                <Typography variant="h6" style={{padding: 10}}>Categories</Typography>
-                                {sections.map((section,index) => (
-                                    <ListItem button key={section.title} onClick={toggleDrawer(false)}>
-                                        <ListItemText primary={section.title}/>
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </Drawer>
-
-
-                    </Toolbar>):(<Toolbar sx={{
-                        borderBottom: 1,
-                        borderColor: 'divider',
-                        background: `${getTheme(darkTheme).surfaceVariant}`
-                    }}>
-                        <Button
-                            size="small"
-                            sx={{color: `${getTheme(darkTheme).onSurfaceVariant}`}}
-
-                        >Subscribe</Button>
-                        <Typography
-                            component="h2"
-                            variant="h5"
-                            color={getTheme(darkTheme).onSurfaceVariant}
-                            align="center"
-                            noWrap
-                            sx={{flex: 1}}
-                        >
-                            {title}
-                        </Typography>
-                        <Backdrop
-                            sx={{color: 'rgb(0,0,0)', zIndex: (theme) => theme.zIndex.drawer + 1}}
-                            open={open}
-                        >
-                            <Paper
-                                component="form"
-                                sx={{p: '2px 4px', display: 'flex', alignItems: 'center', width: 700}}
+                    {isMobile ? (
+                        <Toolbar>
+                            <IconButton
+                                edge="start"
+                                color="default"
+                                onClick={toggleDrawer(true)}
                             >
-                                <IconButton sx={{p: '10px'}} aria-label="menu">
-                                    <MenuIcon/>
-                                </IconButton>
-                                <InputBase
-                                    sx={{ml: 1, flex: 2}}
-                                    placeholder="Search Blogpost"
-                                    inputProps={{'aria-label': 'search blogpost'}}
-                                />
-                                <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
-                                <InputBase
-                                    sx={{ml: 1, flex: 1}}
-                                    placeholder="Category"
-                                    inputProps={{'aria-label': 'search google maps'}}
-                                />
-                                <IconButton onClick={handleClose} type="button" sx={{p: '10px'}} aria-label="search">
-                                    <SearchIcon/>
-                                </IconButton>
-                            </Paper>
+                                <MenuIcon/>
+                            </IconButton>
+                            <Typography variant="h6" style={{flexGrow: 1}}>
+                                Daily Blog
+                            </Typography>
+                            {isAuthenticated ? (
+                                <div>
+                                    <IconButton component={ReduxLink} to="/dashboard" size="small">
+                                        <AccountCircleRounded sx={{color: `${getTheme(darkTheme).primary}`}}/>
+                                    </IconButton>
+                                    <IconButton onClick={handleLogout} size="small">
+                                        <Logout sx={{color: `${getTheme(darkTheme).primary}`}}/>
+                                    </IconButton>
+                                </div>
+                            ) : (
+                                <Button sx={{
+                                    bgcolor: `${getTheme(darkTheme).primary}`,
+                                    color: `${getTheme(darkTheme).onPrimary}`
+                                }} component={ReduxLink} to="/signup" variant="contained" size="small">
+                                    Sign up
+                                </Button>
 
-                        </Backdrop>
-                        <IconButton onClick={handleOpen} sx={{color: `${getTheme(darkTheme).primary}`}}>
-                            <SearchIcon/>
-                        </IconButton>
-                        {isAuthenticated ? (
-                            <div>
-                                <IconButton component={ReduxLink} to="/dashboard" size="small">
-                                    <AccountCircleRounded sx={{color: `${getTheme(darkTheme).primary}`}}/>
-                                </IconButton>
-                                <IconButton onClick={handleLogout} size="small">
-                                    <Logout sx={{color: `${getTheme(darkTheme).primary}`}}/>
-                                </IconButton>
-                            </div>
-                        ) : (
-                            <Button sx={{
-                                bgcolor: `${getTheme(darkTheme).primary}`,
-                                color: `${getTheme(darkTheme).onPrimary}`
-                            }} component={ReduxLink} to="/signup" variant="contained" size="small">
-                                Sign up
-                            </Button>
+                            )}
+                            <Helmet>
+                                <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
+                            </Helmet>
+                            {darkTheme ? (<IconButton onClick={switchTheme} size="small"><WbSunnyOutlined
+                                    sx={{color: `${material().dark.primary}`}}/></IconButton>)
+                                :
+                                (<IconButton size="small" onClick={switchTheme}><WbSunnyRounded
+                                    sx={{color: `${getTheme(darkTheme).primary}`}}
+                                /></IconButton>)}
+                            <Drawer anchor="left" open={drawerOpen} onClose={toggleDrawer(false)}>
+                                <List>
+                                    <Typography variant="h6" style={{padding: 10}}>Categories</Typography>
+                                    {[...getCategories(posts)].map((section, index) => (
+                                        <ListItem button key={section} onClick={toggleDrawer(false)}>
+                                            <ListItemText primary={section}/>
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Drawer>
 
-                        )}
-                        <Helmet>
-                            <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
-                        </Helmet>
-                        {darkTheme ? (<IconButton onClick={switchTheme} size="small"><WbSunnyOutlined
-                                sx={{color: `${material().dark.primary}`}}/></IconButton>)
-                            :
-                            (<IconButton size="small" onClick={switchTheme}><WbSunnyRounded
-                                sx={{color: `${getTheme(darkTheme).primary}`}}
-                            /></IconButton>)}
 
-                    </Toolbar>)}
+                        </Toolbar>) : (
+                        <Toolbar sx={{
+                            borderBottom: 1,
+                            borderColor: 'divider',
+                            background: `${getTheme(darkTheme).surfaceVariant}`
+                        }}>
+                            <Button
+                                size="small"
+                                sx={{color: `${getTheme(darkTheme).onSurfaceVariant}`}}
+
+                            >Subscribe</Button>
+                            <Typography
+                                component="h2"
+                                variant="h5"
+                                color={getTheme(darkTheme).onSurfaceVariant}
+                                align="center"
+                                noWrap
+                                sx={{flex: 1}}
+                            >
+                                {title}
+                            </Typography>
+                            <Backdrop
+                                sx={{color: 'rgb(0,0,0)', zIndex: (theme) => theme.zIndex.drawer + 1}}
+                                open={open}
+                            >
+                                <Paper
+                                    component="form"
+                                    sx={{p: '2px 4px', display: 'flex', alignItems: 'center', width: 700}}
+                                >
+                                    <IconButton sx={{p: '10px'}} aria-label="menu">
+                                        <MenuIcon/>
+                                    </IconButton>
+                                    <InputBase
+                                        sx={{ml: 1, flex: 2}}
+                                        placeholder="Search Blogpost"
+                                        inputProps={{'aria-label': 'search blogpost'}}
+                                    />
+                                    <Divider sx={{height: 28, m: 0.5}} orientation="vertical"/>
+                                    <InputBase
+                                        sx={{ml: 1, flex: 1}}
+                                        placeholder="Category"
+                                        inputProps={{'aria-label': 'search google maps'}}
+                                    />
+                                    <IconButton onClick={handleClose} type="button" sx={{p: '10px'}}
+                                                aria-label="search">
+                                        <SearchIcon/>
+                                    </IconButton>
+                                </Paper>
+
+                            </Backdrop>
+                            <IconButton onClick={handleOpen} sx={{color: `${getTheme(darkTheme).primary}`}}>
+                                <SearchIcon/>
+                            </IconButton>
+                            {isAuthenticated ? (
+                                <div>
+                                    <IconButton component={ReduxLink} to="/dashboard" size="small">
+                                        <AccountCircleRounded sx={{color: `${getTheme(darkTheme).primary}`}}/>
+                                    </IconButton>
+                                    <IconButton onClick={handleLogout} size="small">
+                                        <Logout sx={{color: `${getTheme(darkTheme).primary}`}}/>
+                                    </IconButton>
+                                </div>
+                            ) : (
+                                <Button sx={{
+                                    bgcolor: `${getTheme(darkTheme).primary}`,
+                                    color: `${getTheme(darkTheme).onPrimary}`
+                                }} component={ReduxLink} to="/signup" variant="contained" size="small">
+                                    Sign up
+                                </Button>
+
+                            )}
+                            <Helmet>
+                                <style>{`body { background-color: ${getTheme(darkTheme).background}; }`}</style>
+                            </Helmet>
+                            {darkTheme ? (<IconButton onClick={switchTheme} size="small"><WbSunnyOutlined
+                                    sx={{color: `${material().dark.primary}`}}/></IconButton>)
+                                :
+                                (<IconButton size="small" onClick={switchTheme}><WbSunnyRounded
+                                    sx={{color: `${getTheme(darkTheme).primary}`}}
+                                /></IconButton>)}
+
+                        </Toolbar>)}
 
                     {!isMobile && <Toolbar
                         component="nav"
                         variant="dense"
                         sx={{justifyContent: 'space-between', overflowX: 'auto'}}
                     >
-                        {sections.map((section) => (
+                        {[...getCategories(posts)].map((section) => (
                             <Link
                                 color={getTheme(darkTheme).onBackground}
                                 noWrap
-                                key={section.title}
+                                key={section}
                                 variant="body2"
-                                href={section.url}
+                                href={section}
                                 sx={{p: 1, flexShrink: 0}}
                             >
                                 <Typography
                                     color={getTheme(darkTheme).onBackground}
                                     variant="body2"
                                 >
-                                    {section.title}
+                                    {section}
                                 </Typography>
                             </Link>
                         ))}
@@ -261,6 +276,7 @@ Header.propTypes = {
     setTheme: PropTypes.func.isRequired,
     darkTheme: PropTypes.bool.isRequired,
     loadUser: PropTypes.func.isRequired,
+    posts: PropTypes.object.isRequired,
 }
 
 const mapStateToProps = (state) => ({

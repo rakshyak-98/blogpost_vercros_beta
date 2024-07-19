@@ -139,6 +139,10 @@ Repository.checkUser = async (data) => {
 	return await User.findOne({ username: data.username });
 };
 
+Repository.getProfile = async (id) => {
+	return Profile.findById(id);
+}
+
 Repository.createUser = async function (user) {
 	const schema = zod.object({
 		username: zod.string().min(3).max(50),
@@ -171,4 +175,3 @@ Repository.verifyToken = function (token) {
 };
 
 module.exports = Repository;
-

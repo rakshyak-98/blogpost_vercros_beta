@@ -32,6 +32,16 @@ UserController.createUser = async function (req, res) {
 	}
 };
 
+UserController.getProfile = async function (req, res) {
+	try {
+		const profile = await Repository.getProfile(req.params.id);
+		res.status(200).send(profile);
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
+
+}
+
 
 
 UserController.checkToken = async function (req, res) {

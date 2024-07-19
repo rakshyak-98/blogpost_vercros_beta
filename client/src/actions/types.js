@@ -11,10 +11,12 @@ export const LOGOUT_FAIL = 'LOGOUT_FAIL';
 export const USER_LOADED = 'USER_LOADED';
 export const AUTH_ERROR = 'AUTH_ERROR';
 
+export const PROFILE_CREATED = 'PROFILE_CREATED';
+export const CLEAR_PROFILE = 'CLEAR_PROFILE';
+
 export const SET_ALERT = 'SET_ALERT';
 export const REMOVE_ALERT = 'REMOVE_ALERT';
 
-export const CLEAR_PROFILE = 'CLEAR_PROFILE';
 
 export const POST_SUCCESS = 'POST_SUCCESS';
 export const POST_FAILED = 'POST_FAILED';
