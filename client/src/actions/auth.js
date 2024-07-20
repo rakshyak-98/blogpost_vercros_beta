@@ -40,7 +40,6 @@ export const register = (username, password) => async (dispatch) => {
         const res = await axios.post(`${BACKEND_URL}/api/signUp`, body, config);
 
         dispatch({ type: REGISTER_SUCCESS, payload: res.data });
-        dispatch(loadUser());
     } catch (err) {
         const errors = err.response?.data.errors; // Added safe navigation operator
 

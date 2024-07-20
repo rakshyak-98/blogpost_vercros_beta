@@ -57,8 +57,7 @@ const SignUp = ({setAlert, register, isAuthenticated, darkTheme}) => {
     };
 
     useEffect(() => {
-
-    }, [darkTheme]);
+    }, [darkTheme, isAuthenticated]);
 
     function getLight() {
         return darkTheme?material().dark:material().light;
